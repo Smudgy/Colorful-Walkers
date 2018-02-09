@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <style>
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    </style>
+
+</head>
+
+<body bgcolor="#000000">
+    <canvas id=c></canvas>
+
+
+    <script>
+        //onload + audiolistener function
+
+        window.onload = function() {
+            window.wallpaperRegisterAudioListener(wallpaperAudioListener);
+        };
+
+        window.wallpaperPropertyListener = {
+            applyUserProperties: function(properties) {
+                if (properties.amount) {
+                    amount = properties.amount.value;
+                }
+
+                if (properties.trail_l) {
+                    trail_l = (100 - properties.trail_l.value) / 200;
+                    if (properties.trail_l) {
+                        ctx.shadowBlur = 5;
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.fillStyle = startcolor;
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                }
+
+                if (properties.size) {
+                    size = properties.size.value;
+                }
+
+                if (properties.esize) {
+                    extrasize = properties.esize.value;
+                }
+
+                if (properties.colormode) {
+                    colormode = properties.colormode.value;
+                }
+
+                if (properties.orientation) {
+                    l_orient = properties.orientation.value;
+                }
+
+
+                if (properties.colorrotationspeed) {
+                    colorrotspeed = properties.colorrotationspeed.value / 10;
+                }
+
+                if (properties.hue) {
+                    hue = properties.hue.value;
+                }
+
+                if (properties.ehue) {
+                    ehue = properties.ehue.value;
+                }
+
+                if (properties.sat) {
+                    sat = properties.sat.value;
+                }
+
+                if (properties.esat) {
+                    esat = properties.esat.value;
+                }
+
+                if (properties.lum) {
+                    lum = properties.lum.value;
+                }
+
+                if (properties.elum) {
+                    elum = properties.elum.value;
+                }
+
+                if (properties.speed) {
+                    speed = (properties.speed.value) / 10;
+                }
+
+                if (properties.espeed) {
+                    speedmult = (properties.espeed.value) / 10;
+                }
+
+                if (properties.turn) {
+                    turnrate = (properties.turn.value) / 500;
+                }
+
+                if (properties.eturn) {
+                    turnmult = ((properties.eturn.value) / 100) - 1;
+                }
+                ///////////////////////////////////////////////////////////////////////
+
+                if (properties.speed_impact) {
+                    speed_impact = 11 - (properties.speed_impact.value);
+                }
+
+                if (properties.size_impact) {
+                    size_impact = 11 - (properties.size_impact.value);
+                }
+
+                if (properties.turn_impact) {
+                    turn_impact = 11 - (properties.turn_impact.value);
+                }
+
+                if (properties.ehue_impact) {
+                    ehue_impact = 11 - (properties.ehue_impact.value);
+                }
+
+                if (properties.elum_impact) {
+                    elum_impact = 11 - (properties.elum_impact.value);
+                }
+
+                if (properties.esat_impact) {
+                    esat_impact = 11 - (properties.esat_impact.value);
+                }
+                ///////////////////////////////////////////////////////////////////////
+
+                if (properties.walkblend) {
+                    walkblend = properties.walkblend.value;
+                    if (walkblend) {
+                        ctx.shadowBlur = 5;
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.fillStyle = startcolor;
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                }
+
+                if (properties.col_trail) {
+                    col_trail = (properties.col_trail.value);
+                    if (col_trail == false) {
+                        ctx.shadowBlur = 5;
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.fillStyle = startcolor;
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                }
+
+                if (properties.col_trail_alpha) {
+                    col_trail_alpha = (properties.col_trail_alpha.value / 100);
+                    if (col_trail_alpha) {
+                        ctx.shadowBlur = 5;
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.fillStyle = startcolor;
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                }
+
+                if (properties.col_trail_col) {
+                    var customColor = properties.col_trail_col.value.split(' ');
+                    col_trail_r = Math.ceil(customColor[0] * 255);
+                    col_trail_g = Math.ceil(customColor[1] * 255);
+                    col_trail_b = Math.ceil(customColor[2] * 255);
+
+                    colachanged = properties.col_trail_col.value;
+                    if (colachanged) {
+                        ctx.shadowBlur = 5;
+                        ctx.globalCompositeOperation = 'source-over';
+                        ctx.fillStyle = startcolor;
+                        ctx.fillRect(0, 0, w, h);
+                    }
+                }
+            }
+        };
+        var startcolor = 'rgb(20, 20, 20)';
+        var colormode = 0;
+        var l_orient = 2;
+        var colorrotspeed = -1;
+
+        var speed_impact = 6; //values beteen 11-1, 6 is AVG
+        var size_impact = 5;
+        // var turn_impact = 6; //removed from .json
+        var ehue_impact = 8;
+        var elum_impact = 7;
+        var esat_impact = 7;
+
+        var col_trail = 0;
+        var col_trail_alpha = 0.05;
+        var col_trail_r = 0;
+        var col_trail_g = 255;
+        var col_trail_b = 123;
+        var colachanged;
+
+        var walkblend = 'source-over';
+        var fadeblend = 'source-over';
+
+        var hue = 120;
+        var ehue = 120;
+        var sat = 100;
+        var esat = 0;
+        var lum = 30;
+        var elum = 0;
+
+        var amount = 100;
+        var trail_l = 0.06;
+        var size = 10;
+        var extrasize = 10;
+        var walkers = [];
+
+        var speed = 1;
+        var speedmult = 7;
+        var turnrate = 0.5;
+        var turnmult = -1.75;
+        var sign = 1;
+        var random = Math.random() * 50;
+
+        var AverageLowFreq = 0;
+        var arr = []; //matrix to avoid stuttering/flickering
+        function wallpaperAudioListener(audioArray) {
+            var normalise = audioArray.slice(0, 32).concat(audioArray.slice(64, 64 + 32)); //more frequencies means less bass interaction/ more stops on tremble (32-48)
+            // var normalise = audioArray;
+            var threshold = audioArray.slice(0, 16).concat(audioArray.slice(64, 64 + 16));
+
+            if (Math.max.apply(Math, threshold) > 0.02) {
+                var ratio = Math.max.apply(Math, normalise);
+                for (i = 0; i < audioArray.length; i++) {
+                    audioArray[i] /= ratio;
+                }
+            }
+
+            var lowFreqs = audioArray.slice(0, 5).concat(audioArray.slice(64, 64 + 5));
+            var sum = lowFreqs.reduce((a, b) => a + b, 0);
+            var bass = sum / lowFreqs.length;
+
+            if (arr[0] && arr[1]) {
+                arr[1] = arr[0];
+                arr[0] = bass;
+                AverageLowFreq = arr[0] * 0.67 + arr[1] * 0.33;
+            } else if (arr[0]) {
+                arr[1] = arr[0];
+                arr[0] = bass;
+                AverageLowFreq = arr[0];
+            } else {
+                arr[0] = bass;
+                AverageLowFreq = arr[0];
+            }
+
+            if (AverageLowFreq < 0.05) {
+                AverageLowFreq = 0;
+            }
+        };
+
+        var w = c.width = window.innerWidth,
+            h = c.height = window.innerHeight,
+            ctx = c.getContext('2d'),
+            tick = 0;
+
+        var walker = function() {
+            var x = Math.random() * w,
+                y = Math.random() * h,
+                dir = Math.random() * 360;
+
+            this.walk = function() {
+                x += Math.cos(dir) * (speed + Math.pow(AverageLowFreq, (speed_impact) / 6) * speedmult);
+                y += Math.sin(dir) * (speed + Math.pow(AverageLowFreq, (speed_impact) / 6) * speedmult);
+
+                var turn = turnrate + turnrate * turnmult * AverageLowFreq;
+
+                // if (random > 0) {
+                // 	dir += turn * sign;
+                // 	random -= 0.01;
+                // } else {
+                // 	sign *= -1;
+                // 	random = Math.random() * 50;
+                // }
+
+                random = Math.random();
+                if (random < 0.2) {
+                    dir += turn;
+                    sign = turn;
+                } else if (random > 0.8) {
+                    dir -= turn;
+                    sign = -turn;
+                } else {
+                    dir += sign;
+                }
+
+                // random = Math.random();
+                // if (random < 0.5) {
+                //     dir += turn;
+                // } else {
+                //     dir -= turn;
+                // }
+
+                if (x > w || x < 0) {
+                    x = w - x;
+                }
+                if (y > h || y < 0) {
+                    y = h - y;
+                }
+            }
+            this.show = function() {
+                var lumi = lum + (Math.pow(AverageLowFreq, (elum_impact) / 6) * elum);
+                if (lumi < 5) {
+                    lumi = 5;
+                }
+                var satu = sat + (Math.pow(AverageLowFreq, (esat_impact) / 6) * esat);
+                if (satu > 90) {
+                    satu = 90;
+                }
+                var hue_ = hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                if (colormode == 0) {
+                    var col1 = colorspeed[0] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col2 = colorspeed[1] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col3 = colorspeed[2] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col4 = colorspeed[3] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col5 = colorspeed[4] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col6 = colorspeed[5] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    switch (l_orient) {
+                        case 0:
+                            var col = ctx.createLinearGradient(0, 0, w, 0);
+                            break;
+                        case 1:
+                            var col = ctx.createLinearGradient(0, h, 0, 0);
+                            break;
+                        case 2:
+                            var col = ctx.createLinearGradient(0, 0, w, h);
+                            break;
+                        case 3:
+                            var col = ctx.createLinearGradient(0, h, w, 0);
+                    }
+                    col.addColorStop("0.0", 'hsl(' + col1 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.17", 'hsl(' + col2 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.33", 'hsl(' + col3 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.5", 'hsl(' + col4 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.67", 'hsl(' + col5 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.83", 'hsl(' + col6 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("1", 'hsl(' + col1 + ', ' + satu + '%, ' + lumi + '%)');
+                } else if (colormode == 1) {
+                    var col1 = colorspeed[0] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col2 = colorspeed[1] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col3 = colorspeed[2] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col4 = colorspeed[3] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col5 = colorspeed[4] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col6 = colorspeed[5] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col = ctx.createRadialGradient(w / 2, h / 2, w / 20, w / 2, h / 2, (w / 2));
+                    col.addColorStop("0.0", 'hsl(' + col1 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.17", 'hsl(' + col2 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.33", 'hsl(' + col3 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.5", 'hsl(' + col4 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.67", 'hsl(' + col5 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("0.83", 'hsl(' + col6 + ', ' + satu + '%, ' + lumi + '%)');
+                    col.addColorStop("1", 'hsl(' + col1 + ', ' + satu + '%, ' + lumi + '%)');
+                } else if (colormode == 2) {
+                    var col1 = colorspeed[0] + hue + (Math.pow(AverageLowFreq, (ehue_impact) / 6) * ehue);
+                    var col = 'hsl(' + col1 + ', ' + satu + '%, ' + lumi + '%)';
+                } else if (colormode == 3) {
+                    var col = 'hsl(' + hue_ + ', ' + satu + '%, ' + lumi + '%)';
+                } else {
+                    var col = '#f00';
+                }
+
+                ctx.beginPath();
+                ctx.fillStyle = col;
+                ctx.arc(x, y, size + extrasize * Math.pow(AverageLowFreq, (size_impact) / 6), 0, Math.PI * 2, true);
+                ctx.fill();
+            }
+        }
+
+        function walkamount() {
+            if (walkers.length <= amount) {
+                walkers.push(new walker());
+            }
+            if (walkers.length > amount) {
+                walkers.pop();
+            }
+        };
+
+        function anim() {
+
+            window.requestAnimationFrame(anim);
+
+            walkamount();
+            tick += .1;
+
+            if (colormode == 0 || colormode == 1 || colormode == 2) {
+                for (var u = 0; u < colorspeed.length; u++) {
+                    colorspeed[u] += colorrotspeed;
+                }
+            }
+
+            ctx.globalCompositeOperation = fadeblend;
+            ctx.fillStyle = 'rgba(0,0,0,' + trail_l + ')'; //to black first, gets rid of trail
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.globalCompositeOperation = 'color';
+            ctx.fillStyle = 'rgba(0,0,0,.01)'; //to black first, gets rid of trail
+            ctx.fillRect(0, 0, w, h);
+
+            if (col_trail == 1) {
+                ctx.globalCompositeOperation = 'color';
+                ctx.fillStyle = 'rgba(' + col_trail_r + ', ' + col_trail_g + ', ' + col_trail_b + ',' + col_trail_alpha + ')';
+                ctx.fillRect(0, 0, w, h);
+            }
+
+            ctx.shadowBlur = 5;
+            ctx.globalCompositeOperation = walkblend;
+            for (var i = 0; i < walkers.length; i++) {
+                walkers[i].walk();
+                walkers[i].show();
+            }
+        }
+
+
+        if (colormode == 0 || colormode == 1) {
+            var colorspeed = [0, 60, 120, 180, 240, 300];
+        } else {
+            var colorspeed = [0];
+        }
+
+        ctx.shadowBlur = 5;
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = startcolor;;
+        ctx.fillRect(0, 0, w, h);
+
+        anim();
+
+        window.addEventListener('resize', function() {
+            w = c.width = window.innerWidth;
+            h = c.height = window.innerHeight;
+            particles.length = 0;
+            // ctx.globalCompositeOperation = 'source-over';
+            // ctx.fillStyle = 'rgb(20, 20, 20)';
+            // ctx.fillRect( 0, 0, w, h );
+        })
+
+    </script>
+</body>
+
+</html>

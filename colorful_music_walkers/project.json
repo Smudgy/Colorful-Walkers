@@ -1,0 +1,422 @@
+{
+	"approved" : true,
+	"description" : "[Audio Responsive]\r\nDots dancing around on your screen, leaving a colorful trail behind.\r\nIncludes lots of customizable options.\r\n\r\nPlease upvote if you enjoy the wallpaper",
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"amount" : 
+			{
+				"editable" : true,
+				"max" : 500,
+				"min" : 1,
+				"order" : 3,
+				"text" : "Amount",
+				"type" : "slider",
+				"value" : 200
+			},
+			"col_trail" : 
+			{
+				"order" : 41,
+				"text" : "Colored tail",
+				"type" : "bool",
+				"value" : false
+			},
+			"col_trail_alpha" : 
+			{
+				"condition" : "col_trail.value",
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 43,
+				"text" : "Alphagain",
+				"type" : "slider",
+				"value" : 5
+			},
+			"col_trail_col" : 
+			{
+				"condition" : "col_trail.value",
+				"order" : 42,
+				"text" : "Color",
+				"type" : "color",
+				"value" : "0 1 0.5"
+			},
+			"colormode" : 
+			{
+				"options" : 
+				[
+					{
+						"label" : "Linear gradient",
+						"value" : 0
+					},
+					{
+						"label" : "Radial gradient",
+						"value" : 1
+					},
+					{
+						"label" : "Rainbow color",
+						"value" : 2
+					},
+					{
+						"label" : "Solid color",
+						"value" : 3
+					}
+				],
+				"order" : 32,
+				"text" : "Color mode",
+				"type" : "combo",
+				"value" : 0
+			},
+			"colorrotationspeed" : 
+			{
+				"condition" : "colormode.value == 0 || colormode.value == 1 || colormode.value == 2",
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 33.200000000000003,
+				"text" : "Hue rotation speed",
+				"type" : "slider",
+				"value" : 15
+			},
+			"default_colors" : 
+			{
+				"order" : 30,
+				"text" : "<h3>Colors</h3>",
+				"type" : "text"
+			},
+			"default_impact" : 
+			{
+				"order" : 60,
+				"text" : "<h3>Impact values</h3>",
+				"type" : "text"
+			},
+			"default_walkers" : 
+			{
+				"order" : 1,
+				"text" : "<h3>Walkers</h3>",
+				"type" : "text"
+			},
+			"ehue" : 
+			{
+				"editable" : true,
+				"max" : 90,
+				"min" : -90,
+				"order" : 33.100000000000001,
+				"text" : "Change in hue",
+				"type" : "slider",
+				"value" : 0
+			},
+			"ehue_impact" : 
+			{
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 65,
+				"text" : "Hue impact",
+				"type" : "slider",
+				"value" : 7
+			},
+			"elum" : 
+			{
+				"editable" : false,
+				"max" : 100,
+				"min" : -100,
+				"order" : 39,
+				"text" : "Change in luminance",
+				"type" : "slider",
+				"value" : 15
+			},
+			"elum_impact" : 
+			{
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 67,
+				"text" : "luminance impact",
+				"type" : "slider",
+				"value" : 4
+			},
+			"esat" : 
+			{
+				"editable" : false,
+				"max" : "100",
+				"min" : -100,
+				"order" : 37,
+				"text" : "Change in saturation",
+				"type" : "slider",
+				"value" : 10
+			},
+			"esat_impact" : 
+			{
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 66,
+				"text" : "Saturation impact",
+				"type" : "slider",
+				"value" : 3
+			},
+			"esize" : 
+			{
+				"editable" : true,
+				"max" : 30,
+				"min" : -30,
+				"order" : 6,
+				"text" : "Change in size",
+				"type" : "slider",
+				"value" : 20
+			},
+			"espeed" : 
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -50,
+				"order" : 8,
+				"text" : "Extra speed",
+				"type" : "slider",
+				"value" : 60
+			},
+			"eturn" : 
+			{
+				"editable" : true,
+				"max" : 500,
+				"min" : -100,
+				"order" : 10,
+				"text" : "Turnrate multiplier",
+				"type" : "slider",
+				"value" : -15
+			},
+			"extra" : 
+			{
+				"order" : 2,
+				"text" : "<small>The <b>'Extra/Change in/multiplier'</b> values are additional changes when audio is playing (the wallpaper reacts on low frequency sounds).</small>",
+				"type" : "text"
+			},
+			"hue" : 
+			{
+				"editable" : true,
+				"max" : 360,
+				"min" : 0,
+				"order" : 33,
+				"text" : "Hue",
+				"type" : "slider",
+				"value" : 85
+			},
+			"lum" : 
+			{
+				"editable" : false,
+				"max" : 100,
+				"min" : 0,
+				"order" : 38,
+				"text" : "Initial luminance",
+				"type" : "slider",
+				"value" : 35
+			},
+			"lumsat" : 
+			{
+				"order" : 35,
+				"text" : "<small><strong>'saturation 0 = no color, saturation 100 = max color'</strong> and <strong>'luminance 0 = black, luminance 100 = white'</strong>. <br/> The extreme values of luminance and saturation can be achieved by <strong>'Initial + Changed'</strong>, try to keep these values within <strong>0-100</strong> for the best results. </small>",
+				"type" : "text"
+			},
+			"orientation" : 
+			{
+				"condition" : "colormode.value == 0",
+				"options" : 
+				[
+					{
+						"label" : "Left → Right",
+						"value" : 0
+					},
+					{
+						"label" : "Top → Bottom",
+						"value" : 1
+					},
+					{
+						"label" : "Top Left → Bottom Right",
+						"value" : 2
+					},
+					{
+						"label" : "Bottom Left → Top Right",
+						"value" : 3
+					}
+				],
+				"order" : 32.100000000000001,
+				"text" : "Gradient orientation",
+				"type" : "combo",
+				"value" : 3
+			},
+			"sat" : 
+			{
+				"editable" : false,
+				"max" : 100,
+				"min" : 0,
+				"order" : 36,
+				"text" : "Initial saturation",
+				"type" : "slider",
+				"value" : 90
+			},
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0.2 0.2 0.2"
+			},
+			"size" : 
+			{
+				"editable" : true,
+				"max" : 30,
+				"min" : 0,
+				"order" : 5,
+				"text" : "Size",
+				"type" : "slider",
+				"value" : 13
+			},
+			"size_impact" : 
+			{
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 62,
+				"text" : "Size impact",
+				"type" : "slider",
+				"value" : 4
+			},
+			"speed" : 
+			{
+				"editable" : true,
+				"max" : 50,
+				"min" : 0,
+				"order" : 7,
+				"text" : "Speed",
+				"type" : "slider",
+				"value" : 20
+			},
+			"speed_impact" : 
+			{
+				"editable" : true,
+				"max" : 10,
+				"min" : 0,
+				"order" : 63,
+				"text" : "Speed impact",
+				"type" : "slider",
+				"value" : 4
+			},
+			"trail_l" : 
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 4,
+				"text" : "Tail length",
+				"type" : "slider",
+				"value" : 90
+			},
+			"turn" : 
+			{
+				"editable" : true,
+				"max" : 500,
+				"min" : 0,
+				"order" : 9,
+				"text" : "Turnrate",
+				"type" : "slider",
+				"value" : 250
+			},
+			"walkblend" : 
+			{
+				"options" : 
+				[
+					{
+						"label" : "normal",
+						"value" : "source-over"
+					},
+					{
+						"label" : "screen",
+						"value" : "screen"
+					},
+					{
+						"label" : "lighten",
+						"value" : "lighten"
+					},
+					{
+						"label" : "color-dodge",
+						"value" : "color-dodge"
+					},
+					{
+						"label" : "difference",
+						"value" : "difference"
+					},
+					{
+						"label" : "exclusion",
+						"value" : "exclusion"
+					},
+					{
+						"label" : "luminosity",
+						"value" : "luminosity"
+					}
+				],
+				"order" : 26,
+				"text" : "Walkers blendmode",
+				"type" : "combo",
+				"value" : "source-over"
+			},
+			"warning_amount" : 
+			{
+				"order" : 3.1000000000000001,
+				"text" : "<small>The amount of walkers can greatly impact the cpu usage of wallpaper engine.</small>",
+				"type" : "text"
+			},
+			"warning_blending" : 
+			{
+				"order" : 25,
+				"text" : "<h3>Blending</h3>",
+				"type" : "text"
+			},
+			"warning_coltrail" : 
+			{
+				"order" : 40,
+				"text" : "<small>Using the colored tail will slightly change the color of the background.</small>",
+				"type" : "text"
+			},
+			"warning_gradient" : 
+			{
+				"order" : 31,
+				"text" : "<small>Using the rainbow gradient color mode will have a bigger impact on the cpu than other options.</small>",
+				"type" : "text"
+			},
+			"warning_impact" : 
+			{
+				"order" : 68,
+				"text" : "<small>The higher the impact value, the faster it will show before the other sound-triggered effects. If you want the walkers to grow faster than they change speed, make sure that: <i>size impact > speed impact</i></small>",
+				"type" : "text"
+			},
+			"warning_precision" : 
+			{
+				"order" : 0.5,
+				"text" : "<small>For precise customizations, use the arrow keys after clicking a slider to change the value by de-/increments of 1.</small>",
+				"type" : "text"
+			},
+			"warning_taillength" : 
+			{
+				"order" : 4.0999999999999996,
+				"text" : "<small>In some occasions (usually with high amounts of saturation/luminance) the tail (or partly) stays visible indefinitely. Try to keep lowering the tail length if this effect is not wished for.</small>",
+				"type" : "text"
+			},
+			"warning_taillength2" : 
+			{
+				"order" : 4.2000000000000002,
+				"text" : "<small>Changing the tail length will also slightly change the color of the background.</small>",
+				"type" : "text"
+			}
+		},
+		"supportsaudioprocessing" : true
+	},
+	"monetization" : false,
+	"preview" : "preview.gif",
+	"tags" : [ "Abstract" ],
+	"title" : "Colorful Walkers",
+	"type" : "web",
+	"visibility" : "public",
+	"workshopid" : 1131881382
+}
