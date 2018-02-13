@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <style>
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  </style>
+
+</head>
+
+<body>
+  <script src="p5.js"></script>
+  <script>
+  //onload + audiolistener function
+
+  window.wallpaperPropertyListener = {
+    applyUserProperties: function(properties) {
+      if (properties.amount) {
+        n = properties.amount.value;
+        // clear the grid and make a new one
+        dots = [];
+        setup();
+      }
+    }
+  };
+
+  // -----------------------------------------------------
+  // global variables
+
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  let dots = [];
+  let n = 20;
+
+  // Dot class
+
+  class Dot {
+    constructor(x, y) {
+      this.v1 = createVector(x,y);
+    }
+
+    show() {
+      //let d = dist(this.v1.x, this.v1.y, mouseX, mouseY);
+      let v2 = createVector(mouseX - this.v1.x, mouseY - this.v1.y);
+      let d = v2.mag();
+      v2.normalize();
+
+      let d1 = map(d, 0, 1000, 1.0, 0, true);
+      let d2 = map(d, 0, 500, 1.0, 0, true);
+      let roundoff = 5 + 15 * d2;
+      let radius = 15 + 25 * d1;
+
+      noStroke();
+
+      push();
+      colorMode(HSB);
+      translate(this.v1.x - d2 * 25 * v2.x, this.v1.y - d2 * 25 * v2.y);
+      rotate( frameCount / 25 + d1 * TWO_PI );
+      fill(0, 0, 30 + 10 * d2);
+      rect(0, 0, radius, radius, roundoff);
+      pop();
+    }
+  };
+
+  // p5 setup() and draw()
+
+  function setup() {
+    createCanvas(w, h);
+    rectMode(CENTER);
+    let swtch = w/(4*n);
+
+    for (let y = 0; y < h; y += w/n) {
+      for (let x = swtch; x < w - swtch; x += w/n) {
+        dots.push(new Dot(x, y));
+      }
+      swtch *= -1;
+    }
+  }
+
+  function draw() {
+    background(50);
+    for (let i = 0; i < dots.length; i++) {
+      dots[i].show();
+    }
+
+    //spinner();
+  }
+
+  function spinner() {
+    let v3 = createVector( sin(tick), cos(tick) );
+    v3.mult(12);
+
+    noStroke();
+    fill(255, 255, 255, 255);
+    ellipse(mouseX - v3.x, mouseY + v3.y, 15, 15);
+    ellipse(mouseX + v3.x, mouseY - v3.y, 15, 15);
+  }
+
+  // resize function
+
+  window.addEventListener('resize', function() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  })
+
+  </script>
+</body>
+
+</html>

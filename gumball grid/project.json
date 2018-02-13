@@ -1,0 +1,28 @@
+{
+	"approved" : true,
+	"description" : "[Audio Responsive]\r\nDots dancing around on your screen, leaving a colorful trail behind.\r\nIncludes lots of customizable options.\r\n\r\nPlease upvote if you enjoy the wallpaper",
+	"file" : "index.html",
+	"general" :
+	{
+		"properties" :
+		{
+			"amount" :
+			{
+				"editable" : true,
+				"max" : 50,
+				"min" : 5,
+				"order" : 1,
+				"text" : "Amount",
+				"type" : "slider",
+				"value" : 30
+			},
+		},
+		"supportsaudioprocessing" : true
+	},
+	"monetization" : false,
+	"tags" : [ "Abstract" ],
+	"title" : "Grid",
+	"type" : "web",
+	"visibility" : "public",
+	"workshopid" : 1131881382
+}
