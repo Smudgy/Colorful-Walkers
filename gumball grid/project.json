@@ -16,6 +16,13 @@
 				"type" : "slider",
 				"value" : 30
 			},
+			"hex" :
+			{
+				"order" : 1.1,
+				"text" : "Alternate grid",
+				"type" : "bool",
+				"value" : true
+			},
 			"size" :
 			{
 				"order" : 10,
@@ -38,7 +45,7 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 10.2,
-				"text" : "Size addition",
+				"text" : "Size change on mouse",
 				"type" : "slider",
 				"value" : 25
 			},
@@ -48,7 +55,7 @@
 				"max" : 1500,
 				"min" : 0,
 				"order" : 10.3,
-				"text" : "Addition distance",
+				"text" : "Distance",
 				"type" : "slider",
 				"value" : 500
 			},
@@ -65,7 +72,7 @@
 			"shift" :
 			{
 				"order" : 30,
-				"text" : "<hr><h3><b>Shift</b></h3><small>Displacement of the shapes from or towards the pointer (mouse).</small><hr>",
+				"text" : "<hr><h3><b>Shift</b></h3><small>Displacement of the shapes from mouse.</small><hr>",
 				"type" : "text"
 			},
 			"sh1" :
@@ -84,7 +91,7 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 30.2,
-				"text" : "Shift addition",
+				"text" : "Shift change on mouse",
 				"type" : "slider",
 				"value" : 25
 			},
@@ -94,7 +101,7 @@
 				"max" : 1500,
 				"min" : 0,
 				"order" : 30.3,
-				"text" : "Addition distance",
+				"text" : "Distance",
 				"type" : "slider",
 				"value" : 500
 			},
@@ -130,7 +137,7 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 40.2,
-				"text" : "Roundness addition",
+				"text" : "Roundness change on mouse",
 				"type" : "slider",
 				"value" : 25
 			},
@@ -140,7 +147,7 @@
 				"max" : 1500,
 				"min" : 0,
 				"order" : 40.3,
-				"text" : "Addition distance",
+				"text" : "Distance",
 				"type" : "slider",
 				"value" : 500
 			},
@@ -153,6 +160,256 @@
 				"text" : "Curve",
 				"type" : "slider",
 				"value" : 0
+			},
+			"hue" :
+			{
+				"order" : 50,
+				"text" : "<hr><h3><b>Hue</b></h3><small>Color of the shapes.</small><hr>",
+				"type" : "text"
+			},
+			"hue1" :
+			{
+				"editable" : true,
+				"max" : 360,
+				"min" : 0,
+				"order" : 50.1,
+				"text" : "Hue offset",
+				"type" : "slider",
+				"value" : 25
+			},
+			"hue2" :
+			{
+				"editable" : true,
+				"max" : 720,
+				"min" : -720,
+				"order" : 50.2,
+				"text" : "Hue change on mouse",
+				"type" : "slider",
+				"value" : 25
+			},
+			"hued" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 50.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"huep" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 50.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"hueLoop" :
+			{
+				"editable" : true,
+				"max" : 50,
+				"min" : 0,
+				"order" : 50.5,
+				"text" : "Hue rotation",
+				"type" : "slider",
+				"value" : 1
+			},
+			"saturation" :
+			{
+				"order" : 60,
+				"text" : "<hr><h3><b>Saturation</b></h3><small>Saturation of the color.</small><hr>",
+				"type" : "text"
+			},
+			"sat1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 60.1,
+				"text" : "Saturation base",
+				"type" : "slider",
+				"value" : 25
+			},
+			"sat2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 60.2,
+				"text" : "Saturation change on mouse",
+				"type" : "slider",
+				"value" : 25
+			},
+			"satd" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 60.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"satp" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 60.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"luminance" :
+			{
+				"order" : 70,
+				"text" : "<hr><h3><b>Luminance</b></h3><small>Brightness of the color.</small><hr>",
+				"type" : "text"
+			},
+			"lum1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 70.1,
+				"text" : "Luminance base",
+				"type" : "slider",
+				"value" : 25
+			},
+			"lum2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 70.2,
+				"text" : "Luminance change on mouse",
+				"type" : "slider",
+				"value" : 25
+			},
+			"lumd" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 70.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"lump" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 70.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"alpha" :
+			{
+				"order" : 80,
+				"text" : "<hr><h3><b>Alpha</b></h3><small>Alpha of the shapes.</small><hr>",
+				"type" : "text"
+			},
+			"a1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 80.1,
+				"text" : "Alpha base",
+				"type" : "slider",
+				"value" : 25
+			},
+			"a2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 80.2,
+				"text" : "Alpha change on mouse",
+				"type" : "slider",
+				"value" : 25
+			},
+			"ad" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 80.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"ap" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 80.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"rotation" :
+			{
+				"order" : 35,
+				"text" : "<hr><h3><b>Rotation</b></h3><small>Orientation of the shapes.</small><hr>",
+				"type" : "text"
+			},
+			"rot1" :
+			{
+				"editable" : true,
+				"max" : 360,
+				"min" : 0,
+				"order" : 35.1,
+				"text" : "Rotation offset",
+				"type" : "slider",
+				"value" : 25
+			},
+			"rot2" :
+			{
+				"editable" : true,
+				"max" : 720,
+				"min" : -720,
+				"order" : 35.2,
+				"text" : "Rotation change on mouse",
+				"type" : "slider",
+				"value" : 25
+			},
+			"rotd" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 35.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"rotp" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 35.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"rotLoop" :
+			{
+				"editable" : true,
+				"max" : 50,
+				"min" : 0,
+				"order" : 35.5,
+				"text" : "Rotation speed",
+				"type" : "slider",
+				"value" : 100
 			},
 		},
 		"supportsaudioprocessing" : true
