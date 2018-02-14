@@ -16,6 +16,144 @@
 				"type" : "slider",
 				"value" : 30
 			},
+			"size" :
+			{
+				"order" : 10,
+				"text" : "<hr><h3><b>Size</b></h3><small>Size of the shapes.</small><hr>",
+				"type" : "text"
+			},
+			"rad1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 10.1,
+				"text" : "Size base value",
+				"type" : "slider",
+				"value" : 25
+			},
+			"rad2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 10.2,
+				"text" : "Size addition",
+				"type" : "slider",
+				"value" : 25
+			},
+			"radd" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 10.3,
+				"text" : "Addition distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"radp" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 10.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"shift" :
+			{
+				"order" : 30,
+				"text" : "<hr><h3><b>Shift</b></h3><small>Displacement of the shapes from or towards the pointer (mouse).</small><hr>",
+				"type" : "text"
+			},
+			"sh1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 30.1,
+				"text" : "Shift base",
+				"type" : "slider",
+				"value" : 25
+			},
+			"sh2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 30.2,
+				"text" : "Shift addition",
+				"type" : "slider",
+				"value" : 25
+			},
+			"shd" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 30.3,
+				"text" : "Addition distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"shp" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 30.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
+			"roundness" :
+			{
+				"order" : 40,
+				"text" : "<hr><h3><b>Roundness</b></h3><small>Rounds the corners of the shapes.</small><hr>",
+				"type" : "text"
+			},
+			"rou1" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : 0,
+				"order" : 40.1,
+				"text" : "Roundness base",
+				"type" : "slider",
+				"value" : 25
+			},
+			"rou2" :
+			{
+				"editable" : true,
+				"max" : 100,
+				"min" : -100,
+				"order" : 40.2,
+				"text" : "Roundness addition",
+				"type" : "slider",
+				"value" : 25
+			},
+			"roud" :
+			{
+				"editable" : true,
+				"max" : 1500,
+				"min" : 0,
+				"order" : 40.3,
+				"text" : "Addition distance",
+				"type" : "slider",
+				"value" : 500
+			},
+			"roup" :
+			{
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 40.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : 0
+			},
 		},
 		"supportsaudioprocessing" : true
 	},

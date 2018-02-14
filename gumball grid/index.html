@@ -29,6 +29,51 @@
         dots = [];
         setup();
       }
+
+      if (properties.sh1) {
+        sh1 = properties.sh1.value;
+        // clear the grid and make a new one
+        dots = [];
+        setup();
+      }
+      if (properties.sh2) {
+        sh2 = properties.sh2.value;
+        // clear the grid and make a new one
+        dots = [];
+        setup();
+      }
+      if (properties.shd) {
+        shd = properties.shd.value;
+      }
+      if (properties.shp) {
+        shp = 5.0 / ( 10.0 / ( properties.shp.value + 6 ));
+      }
+
+      if (properties.rad1) {
+        rad1 = properties.rad1.value;
+      }
+      if (properties.rad2) {
+        rad2 = properties.rad2.value;
+      }
+      if (properties.radd) {
+        radd = properties.radd.value;
+      }
+      if (properties.radp) {
+        radp = 5.0 / ( 10.0 / ( properties.radp.value + 6 ));
+      }
+
+      if (properties.rou1) {
+        rou1 = properties.rou1.value;
+      }
+      if (properties.rou2) {
+        rou2 = properties.rou2.value;
+      }
+      if (properties.roud) {
+        roud = properties.roud.value;
+      }
+      if (properties.roup) {
+        roup = 5.0 / ( 10.0 / ( properties.roup.value + 6 ));
+      }
     }
   };
 
@@ -37,9 +82,62 @@
 
   let w = window.innerWidth;
   let h = window.innerHeight;
-
   let dots = [];
-  let n = 20;
+
+  // customizable variables
+
+  // radius ( 0 - inf )
+  let rad1 = 25;
+  let rad2 = -20;
+  let radd = 500;
+  let radp = 5;
+
+  // shift ( 0 - inf )
+  let sh1 = 20;
+  let sh2 = 50;
+  let shd = 500;
+  let shp = 2;
+
+  // roundoff ( 0 - 100% )
+  let rou1 = 20;
+  let rou2 = 80;
+  let roud = 500;
+  let roup = 2;
+
+  // rotation ( 0 - 2PI )
+  let rot1 = Math.PI * 2 / 4;
+  let rot2 = Math.PI * 2;
+  let rotd = 500;
+  let rotp = 1;
+  let rotLoop = 75;
+
+  // hue ( 0 - 360 )
+  let hue1 = 120;
+  let hue2 = 0;
+  let hued = 1000;
+  let huep = 1;
+  let hueLoop = 0;
+
+  // sat ( 0 - 100 )
+  let sat1 = 0;
+  let sat2 = 0;
+  let satd = 500;
+  let satp = 1;
+
+  // lum ( 0 - 100 )
+  let lum1 = 30;
+  let lum2 = 20;
+  let lumd = 500;
+  let lump = 1;
+
+  // alpha ( 0 - 100 )
+  let a1 = 100;
+  let a2 = 100;
+  let ad = 500;
+  let ap = 5;
+
+  let n = 25;
+  let swtch = w/(4*n);
 
   // Dot class
 
@@ -54,18 +152,24 @@
       let d = v2.mag();
       v2.normalize();
 
-      let d1 = map(d, 0, 1000, 1.0, 0, true);
-      let d2 = map(d, 0, 500, 1.0, 0, true);
-      let roundoff = 5 + 15 * d2;
-      let radius = 15 + 25 * d1;
+      let shift = sh1 + sh2 * pow(map(d, 0, shd, 1.0, 0, true), shp);
+      let rotation = rot1 + frameCount / rotLoop + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp);
+
+      let hue = ( hue1 + hueLoop * frameCount + hue2 * pow(map(d, 0, hued, 1.0, 0, true), huep)) % 360;
+      let sat = sat1 + sat2 * pow(map(d, 0, satd, 1.0, 0, true), satp );
+      let lum = lum1 + lum2 * pow(map(d, 0, lumd, 1.0, 0, true), lump );
+      let alpha = a1 + a2 * pow(map(d, 0, ad, 1.0, 0, true), ap);
+
+      let radius = Math.max( rad1 + rad2 * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
+      let roundoff = Math.max( ( rou1 + rou2 * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 );
 
       noStroke();
 
       push();
       colorMode(HSB);
-      translate(this.v1.x - d2 * 25 * v2.x, this.v1.y - d2 * 25 * v2.y);
-      rotate( frameCount / 25 + d1 * TWO_PI );
-      fill(0, 0, 30 + 10 * d2);
+      translate(this.v1.x - shift * v2.x, this.v1.y - shift * v2.y);
+      rotate( rotation );
+      fill( hue, sat, lum, alpha );
       rect(0, 0, radius, radius, roundoff);
       pop();
     }
@@ -76,10 +180,11 @@
   function setup() {
     createCanvas(w, h);
     rectMode(CENTER);
-    let swtch = w/(4*n);
 
-    for (let y = 0; y < h; y += w/n) {
-      for (let x = swtch; x < w - swtch; x += w/n) {
+    bound = Math.abs(sh1) + Math.abs(sh2);
+
+    for (let y = -bound; y < h + bound; y += w/n) {
+      for (let x = -swtch - bound; x < w - swtch + bound; x += w/n) {
         dots.push(new Dot(x, y));
       }
       swtch *= -1;
@@ -87,22 +192,14 @@
   }
 
   function draw() {
-    background(50);
+    push();
+    colorMode(HSB);
+    background(200, 30, 10);
+    pop();
+
     for (let i = 0; i < dots.length; i++) {
       dots[i].show();
     }
-
-    //spinner();
-  }
-
-  function spinner() {
-    let v3 = createVector( sin(tick), cos(tick) );
-    v3.mult(12);
-
-    noStroke();
-    fill(255, 255, 255, 255);
-    ellipse(mouseX - v3.x, mouseY + v3.y, 15, 15);
-    ellipse(mouseX + v3.x, mouseY - v3.y, 15, 15);
   }
 
   // resize function
