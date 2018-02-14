@@ -1,4 +1,4 @@
-This repository consist of some html5 canvas projects that have kept me busy.
+This repository consists of some html5 canvas projects that have kept me busy.
 
 # Colorful-Walkers
 Colored Dots on screen that leave a trail behind. Designed for [Wallpaper engine](http://store.steampowered.com/app/431960).
