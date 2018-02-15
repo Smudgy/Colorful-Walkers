@@ -6,15 +6,15 @@
 	{
 		"properties" :
 		{
-			"amount" :
+			"spacing" :
 			{
 				"editable" : true,
-				"max" : 50,
-				"min" : 5,
+				"max" : 100,
+				"min" : 25,
 				"order" : 1,
-				"text" : "Amount",
+				"text" : "Grid spacing",
 				"type" : "slider",
-				"value" : 30
+				"value" : 50
 			},
 			"hex" :
 			{
@@ -23,10 +23,20 @@
 				"type" : "bool",
 				"value" : true
 			},
+			"circle" :
+			{
+				"editable" : true,
+				"max" : 40,
+				"min" : 1,
+				"order" : 1,
+				"text" : "Circle mask",
+				"type" : "slider",
+				"value" : 5
+			},
 			"size" :
 			{
 				"order" : 10,
-				"text" : "<hr><h3><b>Size</b></h3><small>Size of the shapes.</small><hr>",
+				"text" : "<hr><h3><b>Size</b></h3>Size of the shapes.<hr>",
 				"type" : "text"
 			},
 			"rad1" :
@@ -35,29 +45,29 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 10.1,
-				"text" : "Size base value",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 20
 			},
 			"rad2" :
 			{
 				"editable" : true,
 				"max" : 100,
-				"min" : -100,
+				"min" : -10,
 				"order" : 10.2,
-				"text" : "Size change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 40
 			},
 			"radd" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 10.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 4
 			},
 			"radp" :
 			{
@@ -67,12 +77,12 @@
 				"order" : 10.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : -1
 			},
 			"shift" :
 			{
 				"order" : 30,
-				"text" : "<hr><h3><b>Shift</b></h3><small>Displacement of the shapes from mouse.</small><hr>",
+				"text" : "<hr><h3><b>Shift</b></h3>Displacement of the shapes from mouse.<br><b>0</b> will keep the shape in place, <b>< 0</b> will move the shape towards the mouse and <b>> 0</b> will move the shape away from the mouse<hr>",
 				"type" : "text"
 			},
 			"sh1" :
@@ -81,9 +91,9 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 30.1,
-				"text" : "Shift base",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : -50
 			},
 			"sh2" :
 			{
@@ -91,19 +101,19 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 30.2,
-				"text" : "Shift change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 65
 			},
 			"shd" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 30.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 11
 			},
 			"shp" :
 			{
@@ -113,12 +123,12 @@
 				"order" : 30.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : 3
 			},
 			"roundness" :
 			{
 				"order" : 40,
-				"text" : "<hr><h3><b>Roundness</b></h3><small>Rounds the corners of the shapes.</small><hr>",
+				"text" : "<hr><h3><b>Roundness</b></h3>Rounds the corners of the shapes.<br><b>0 </b> for a square, <b>100</b> for a circle.<hr>",
 				"type" : "text"
 			},
 			"rou1" :
@@ -127,7 +137,7 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 40.1,
-				"text" : "Roundness base",
+				"text" : "Base value",
 				"type" : "slider",
 				"value" : 25
 			},
@@ -135,21 +145,21 @@
 			{
 				"editable" : true,
 				"max" : 100,
-				"min" : -100,
+				"min" : 0,
 				"order" : 40.2,
-				"text" : "Roundness change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 100
 			},
 			"roud" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 40.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 13
 			},
 			"roup" :
 			{
@@ -159,12 +169,12 @@
 				"order" : 40.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : 1
 			},
 			"hue" :
 			{
 				"order" : 50,
-				"text" : "<hr><h3><b>Hue</b></h3><small>Color of the shapes.</small><hr>",
+				"text" : "<hr><h3><b>Hue</b></h3>Hue of the shapes.<br> <b>0 or 360</b> is red, <b>120</b> is green, <b>240</b> is blue.<hr>",
 				"type" : "text"
 			},
 			"hue1" :
@@ -173,9 +183,9 @@
 				"max" : 360,
 				"min" : 0,
 				"order" : 50.1,
-				"text" : "Hue offset",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 220
 			},
 			"hue2" :
 			{
@@ -183,19 +193,19 @@
 				"max" : 720,
 				"min" : -720,
 				"order" : 50.2,
-				"text" : "Hue change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 150
 			},
 			"hued" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 50.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 6
 			},
 			"huep" :
 			{
@@ -205,7 +215,7 @@
 				"order" : 50.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : -2
 			},
 			"hueLoop" :
 			{
@@ -213,14 +223,14 @@
 				"max" : 50,
 				"min" : 0,
 				"order" : 50.5,
-				"text" : "Hue rotation",
+				"text" : "Hue rotation speed",
 				"type" : "slider",
-				"value" : 1
+				"value" : 0
 			},
 			"saturation" :
 			{
 				"order" : 60,
-				"text" : "<hr><h3><b>Saturation</b></h3><small>Saturation of the color.</small><hr>",
+				"text" : "<hr><h3><b>Saturation</b></h3>Saturation of the color.<br> <b>0</b> is fully desaturated, <b>100</b> is fully saturated.<hr>",
 				"type" : "text"
 			},
 			"sat1" :
@@ -229,29 +239,29 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 60.1,
-				"text" : "Saturation base",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 65
 			},
 			"sat2" :
 			{
 				"editable" : true,
 				"max" : 100,
-				"min" : -100,
+				"min" : 0,
 				"order" : 60.2,
-				"text" : "Saturation change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 100
 			},
 			"satd" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 60.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 7
 			},
 			"satp" :
 			{
@@ -261,12 +271,12 @@
 				"order" : 60.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : 3
 			},
 			"luminance" :
 			{
 				"order" : 70,
-				"text" : "<hr><h3><b>Luminance</b></h3><small>Brightness of the color.</small><hr>",
+				"text" : "<hr><h3><b>Luminance</b></h3>Brightness of the color.<br> <b>0</b> is dark, <b>100</b> is bright.<hr>",
 				"type" : "text"
 			},
 			"lum1" :
@@ -275,29 +285,29 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 70.1,
-				"text" : "Luminance base",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 20
 			},
 			"lum2" :
 			{
 				"editable" : true,
 				"max" : 100,
-				"min" : -100,
+				"min" : 0,
 				"order" : 70.2,
-				"text" : "Luminance change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 100
 			},
 			"lumd" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 70.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 9
 			},
 			"lump" :
 			{
@@ -307,12 +317,12 @@
 				"order" : 70.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : 0
+				"value" : 4
 			},
 			"alpha" :
 			{
 				"order" : 80,
-				"text" : "<hr><h3><b>Alpha</b></h3><small>Alpha of the shapes.</small><hr>",
+				"text" : "<hr><h3><b>Alpha</b></h3>Alpha of the shapes.<br> <b>0</b> is transparent, <b>100</b> is opaque.<hr>",
 				"type" : "text"
 			},
 			"a1" :
@@ -321,29 +331,29 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 80.1,
-				"text" : "Alpha base",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 100
 			},
 			"a2" :
 			{
 				"editable" : true,
 				"max" : 100,
-				"min" : -100,
+				"min" : 0,
 				"order" : 80.2,
-				"text" : "Alpha change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 100
 			},
 			"ad" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 80.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 5
 			},
 			"ap" :
 			{
@@ -358,18 +368,18 @@
 			"rotation" :
 			{
 				"order" : 35,
-				"text" : "<hr><h3><b>Rotation</b></h3><small>Orientation of the shapes.</small><hr>",
+				"text" : "<hr><h3><b>Rotation</b></h3>Orientation of the shapes in degrees.<br> <b>0 or 360</b> is square edges parallel to the screen/window.<hr>",
 				"type" : "text"
 			},
 			"rot1" :
 			{
 				"editable" : true,
-				"max" : 360,
-				"min" : 0,
+				"max" : 180,
+				"min" : -180,
 				"order" : 35.1,
-				"text" : "Rotation offset",
+				"text" : "Base value",
 				"type" : "slider",
-				"value" : 25
+				"value" : 45
 			},
 			"rot2" :
 			{
@@ -377,19 +387,19 @@
 				"max" : 720,
 				"min" : -720,
 				"order" : 35.2,
-				"text" : "Rotation change on mouse",
+				"text" : "On mouse",
 				"type" : "slider",
-				"value" : 25
+				"value" : 720
 			},
 			"rotd" :
 			{
 				"editable" : true,
-				"max" : 1500,
+				"max" : 15,
 				"min" : 0,
 				"order" : 35.3,
 				"text" : "Distance",
 				"type" : "slider",
-				"value" : 500
+				"value" : 10
 			},
 			"rotp" :
 			{
@@ -409,7 +419,7 @@
 				"order" : 35.5,
 				"text" : "Rotation speed",
 				"type" : "slider",
-				"value" : 100
+				"value" : 3
 			},
 		},
 		"supportsaudioprocessing" : true

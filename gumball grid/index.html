@@ -25,7 +25,8 @@
 
   class Dot {
     constructor(x, y) {
-      this.v1 = createVector(x,y);
+      this.v1 = createVector(x, y);
+      this.anchDist = createVector(w/2 - x, h/2 - y).mag();
     }
 
     show() {
@@ -33,16 +34,15 @@
       let d = v2.mag();
       v2.normalize();
 
-      let radius = Math.max( rad1 * pow(map(d, 0, radd, 0, 1.0, true), 1 / radp) + rad2 * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
-      let roundoff = Math.max( ( rou1 * pow(map(d, 0, roud, 0, 1.0, true), 1 / roup) + rou2 * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 );
-      let shift = sh1 * pow(map(d, 0, shd, 0, 1.0, true), 1 / shp) + sh2 * pow(map(d, 0, shd, 1.0, 0, true), shp);
-      let rotation = rot1 * pow(map(d, 0, rotd, 0, 1.0, true), 1 / rotp) + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount;
+      let radius = Math.max( rad1 + (rad2 - rad1) * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
+      let roundoff = Math.max( ( rou1 + (rou2 - rou1) * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 );
+      let shift = sh1 + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
+      let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
 
-      let hue = ( hue1 * pow(map(d, 0, hued, 0, 1.0, true), 1 / huep) + hue2 * pow(map(d, 0, hued, 1.0, 0, true), huep) + hueLoop * frameCount ) % 360;
-      let sat = sat1 * pow(map(d, 0, satd, 0, 1.0, true), 1 / satp) + sat2 * pow(map(d, 0, satd, 1.0, 0, true), satp );
-      let lum = lum1 * pow(map(d, 0, lumd, 0, 1.0, true), 1 / lump) + lum2 * pow(map(d, 0, lumd, 1.0, 0, true), lump );
-      let alpha = a1 * pow(map(d, 0, ad, 0, 1.0, true), 1 / ap) + a2 * pow(map(d, 0, ad, 1.0, 0, true), ap);
-
+      let hue = ((( hue1 + (hue2 - hue1) * pow(map(d, 0, hued, 1.0, 0, true), huep) + hueLoop * frameCount ) % 360 ) + 360 ) % 360;
+      let sat = sat1 + (sat2 - sat1) * pow(map(d, 0, satd, 1.0, 0, true), satp );
+      let lum = lum1 + (lum2 - lum1) * pow(map(d, 0, lumd, 1.0, 0, true), lump );
+      let alpha = a1 + (a2 - a1) * pow(map(d, 0, ad, 1.0, 0, true), ap);
 
       noStroke();
 
@@ -63,14 +63,31 @@
     angleMode(DEGREES);
     rectMode(CENTER);
 
-    let bound = Math.abs(sh1) + Math.abs(sh2);
-
-    for (let y = -bound; y < h + bound; y += w/n) {
-      for (let x = -swtch - bound; x < w - swtch + bound; x += w/n) {
-        dots.push(new Dot(x, y));
+    let shfBound = -Math.min(sh1, sh2);
+    let xAlt = 0;
+    if ( hex ) {
+      let yAlt = n * sin(60);
+      for ( let y = h/2 - Math.ceil((h / 2 + shfBound)/ yAlt) * yAlt; y < h + shfBound + yAlt; y += yAlt) {
+        for ( let x = w/2 - Math.ceil((w / 2 + shfBound)/ n) * n - xAlt; x < w + shfBound + n; x += n ){
+          dots.push(new Dot(x, y));
+        }
+        if ( xAlt == 0 ) {
+          xAlt = n/2;
+        } else {
+          xAlt = 0;
+        }
       }
-      swtch *= -1;
+    } else {
+      let yAlt = n;
+      for ( let y = h/2 - Math.ceil((h / 2 + shfBound)/ yAlt) * yAlt; y < h + shfBound + yAlt; y += yAlt) {
+        for ( let x = w/2 - Math.ceil((w / 2 + shfBound)/ n) * n - xAlt; x < w + shfBound + n; x += n ){
+          dots.push(new Dot(x, y));
+        }
+      }
     }
+
+    // middle dot for debugging
+    //dots.push(new Dot(w/2, h/2));
   }
 
   function draw() {
@@ -80,7 +97,11 @@
     pop();
 
     for (let i = 0; i < dots.length; i++) {
-      dots[i].show();
+      if ( dots[i].anchDist > circleMask / 2 ) {
+        dots.splice(i,1);
+      } else {
+        dots[i].show();
+      }
     }
   }
 
