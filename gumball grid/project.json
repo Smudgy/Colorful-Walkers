@@ -19,7 +19,28 @@
 			"hex" :
 			{
 				"order" : 1.1,
-				"text" : "Alternate grid",
+				"text" : "Hexagon grid",
+				"type" : "bool",
+				"value" : true
+			},
+			"polygon" :
+			{
+				"condition" : "poly.value == true",
+				"order" : 19.1,
+				"text" : "With polygons enabled, you will be able to customize the <b>amount of sides</b>.",
+				"type" : "text"
+			},
+			"polygon2" :
+			{
+				"condition" : "poly.value == false",
+				"order" : 19,
+				"text" : "With polygons disabled, all shapes are rectangles, and you will be able to customize the <b>w/h ratio</b> and the <b>roundness</b> of the corners.",
+				"type" : "text"
+			},
+			"poly" :
+			{
+				"order" : 19,
+				"text" : "polygon shapes",
 				"type" : "bool",
 				"value" : true
 			},
@@ -36,7 +57,7 @@
 			"size" :
 			{
 				"order" : 10,
-				"text" : "<hr><h3><b>Size</b></h3>Size of the shapes.<hr>",
+				"text" : "<hr><h3><b>Size</b></h3>Size of the shapes.",
 				"type" : "text"
 			},
 			"rad1" :
@@ -79,10 +100,112 @@
 				"type" : "slider",
 				"value" : -1
 			},
+			"ratio" :
+			{
+				"condition" : "poly.value == false",
+				"order" : 20,
+				"text" : "<hr><h3><b>W/h ratio</b></h3>Width / height ratio of the rectangles.",
+				"type" : "text"
+			},
+			"rat1" :
+			{
+				"condition" : "poly.value == false",
+				"editable" : true,
+				"max" : 8,
+				"min" : -8,
+				"order" : 20.1,
+				"text" : "Base value",
+				"type" : "slider",
+				"value" : 0
+			},
+			"rat2" :
+			{
+				"condition" : "poly.value == false",
+				"editable" : true,
+				"max" : 8,
+				"min" : -8,
+				"order" : 20.2,
+				"text" : "On mouse",
+				"type" : "slider",
+				"value" : 0
+			},
+			"ratd" :
+			{
+				"condition" : "poly.value == false",
+				"editable" : true,
+				"max" : 15,
+				"min" : 0,
+				"order" : 20.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 4
+			},
+			"ratp" :
+			{
+				"condition" : "poly.value == false",
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 20.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : -1
+			},
+			"corners" :
+			{
+				"condition" : "poly.value == true",
+				"order" : 20,
+				"text" : "<hr><h3><b>Polygon Sides</b></h3>Amount of sides for the polygons.",
+				"type" : "text"
+			},
+			"corn1" :
+			{
+				"condition" : "poly.value == true",
+				"editable" : true,
+				"max" : 10,
+				"min" : 3,
+				"order" : 20.1,
+				"text" : "Base value",
+				"type" : "slider",
+				"value" : 3
+			},
+			"corn2" :
+			{
+				"condition" : "poly.value == true",
+				"editable" : true,
+				"max" : 10,
+				"min" : 3,
+				"order" : 20.2,
+				"text" : "On mouse",
+				"type" : "slider",
+				"value" : 6
+			},
+			"cornd" :
+			{
+				"condition" : "poly.value == true",
+				"editable" : true,
+				"max" : 15,
+				"min" : 0,
+				"order" : 20.3,
+				"text" : "Distance",
+				"type" : "slider",
+				"value" : 4
+			},
+			"cornp" :
+			{
+				"condition" : "poly.value == true",
+				"editable" : true,
+				"max" : 4,
+				"min" : -5,
+				"order" : 20.4,
+				"text" : "Curve",
+				"type" : "slider",
+				"value" : -1
+			},
 			"shift" :
 			{
 				"order" : 30,
-				"text" : "<hr><h3><b>Shift</b></h3>Displacement of the shapes from mouse.<br><b>0</b> will keep the shape in place, <b>< 0</b> will move the shape towards the mouse and <b>> 0</b> will move the shape away from the mouse<hr>",
+				"text" : "<hr><h3><b>Shift</b></h3>Displacement of the shapes from mouse.<br><b>0</b> will keep the shape in place, <b>< 0</b> will move the shape towards the mouse and <b>> 0</b> will move the shape away from the mouse.",
 				"type" : "text"
 			},
 			"sh1" :
@@ -127,46 +250,51 @@
 			},
 			"roundness" :
 			{
-				"order" : 40,
-				"text" : "<hr><h3><b>Roundness</b></h3>Rounds the corners of the shapes.<br><b>0 </b> for a square, <b>100</b> for a circle.<hr>",
+				"condition" : "poly.value == false",
+				"order" : 21,
+				"text" : "<hr><h3><b>Roundness</b></h3>Rounds the corners of the shapes.<br><b>0 </b> for a square, <b>100</b> for a circle.",
 				"type" : "text"
 			},
 			"rou1" :
 			{
+				"condition" : "poly.value == false",
 				"editable" : true,
 				"max" : 100,
 				"min" : 0,
-				"order" : 40.1,
+				"order" : 21.1,
 				"text" : "Base value",
 				"type" : "slider",
 				"value" : 25
 			},
 			"rou2" :
 			{
+				"condition" : "poly.value == false",
 				"editable" : true,
 				"max" : 100,
 				"min" : 0,
-				"order" : 40.2,
+				"order" : 21.2,
 				"text" : "On mouse",
 				"type" : "slider",
 				"value" : 100
 			},
 			"roud" :
 			{
+				"condition" : "poly.value == false",
 				"editable" : true,
 				"max" : 15,
 				"min" : 0,
-				"order" : 40.3,
+				"order" : 21.3,
 				"text" : "Distance",
 				"type" : "slider",
 				"value" : 13
 			},
 			"roup" :
 			{
+				"condition" : "poly.value == false",
 				"editable" : true,
 				"max" : 4,
 				"min" : -5,
-				"order" : 40.4,
+				"order" : 21.4,
 				"text" : "Curve",
 				"type" : "slider",
 				"value" : 1
@@ -174,7 +302,7 @@
 			"hue" :
 			{
 				"order" : 50,
-				"text" : "<hr><h3><b>Hue</b></h3>Hue of the shapes.<br> <b>0 or 360</b> is red, <b>120</b> is green, <b>240</b> is blue.<hr>",
+				"text" : "<hr><h3><b>Hue</b></h3>Hue of the shapes.<br> <b>0 or 360</b> is red, <b>120</b> is green, <b>240</b> is blue.",
 				"type" : "text"
 			},
 			"hue1" :
@@ -230,7 +358,7 @@
 			"saturation" :
 			{
 				"order" : 60,
-				"text" : "<hr><h3><b>Saturation</b></h3>Saturation of the color.<br> <b>0</b> is fully desaturated, <b>100</b> is fully saturated.<hr>",
+				"text" : "<hr><h3><b>Saturation</b></h3>Saturation of the color.<br> <b>0</b> is fully desaturated, <b>100</b> is fully saturated.",
 				"type" : "text"
 			},
 			"sat1" :
@@ -276,7 +404,7 @@
 			"luminance" :
 			{
 				"order" : 70,
-				"text" : "<hr><h3><b>Luminance</b></h3>Brightness of the color.<br> <b>0</b> is dark, <b>100</b> is bright.<hr>",
+				"text" : "<hr><h3><b>Luminance</b></h3>Brightness of the color.<br> <b>0</b> is dark, <b>100</b> is bright.",
 				"type" : "text"
 			},
 			"lum1" :
@@ -322,7 +450,7 @@
 			"alpha" :
 			{
 				"order" : 80,
-				"text" : "<hr><h3><b>Alpha</b></h3>Alpha of the shapes.<br> <b>0</b> is transparent, <b>100</b> is opaque.<hr>",
+				"text" : "<hr><h3><b>Alpha</b></h3>Alpha of the shapes.<br> <b>0</b> is transparent, <b>100</b> is opaque.",
 				"type" : "text"
 			},
 			"a1" :
@@ -368,7 +496,7 @@
 			"rotation" :
 			{
 				"order" : 35,
-				"text" : "<hr><h3><b>Rotation</b></h3>Orientation of the shapes in degrees.<br> <b>0 or 360</b> is square edges parallel to the screen/window.<hr>",
+				"text" : "<hr><h3><b>Rotation</b></h3>Orientation of the shapes in degrees.<br> <b>0 or 360</b> is square edges parallel to the screen/window.",
 				"type" : "text"
 			},
 			"rot1" :

@@ -34,11 +34,17 @@
       let d = v2.mag();
       v2.normalize();
 
+      // shape
       let radius = Math.max( rad1 + (rad2 - rad1) * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
-      let roundoff = Math.max( ( rou1 + (rou2 - rou1) * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 );
+      let roundoff = Math.max( ( rou1 + (rou2 - rou1) * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 ); // squares only
+      let ratio = rat1 + (rat2 - rat1) * pow(map(d, 0, ratd, 1.0, 0, true), ratp); // squares only
+      let corners = corn1 + (corn2 - corn1) * pow(map(d, 0, cornd, 1.0, 0, true), cornp); // poly only
+
+      // orientation
       let shift = sh1 + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
       let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
 
+      // color
       let hue = ((( hue1 + (hue2 - hue1) * pow(map(d, 0, hued, 1.0, 0, true), huep) + hueLoop * frameCount ) % 360 ) + 360 ) % 360;
       let sat = sat1 + (sat2 - sat1) * pow(map(d, 0, satd, 1.0, 0, true), satp );
       let lum = lum1 + (lum2 - lum1) * pow(map(d, 0, lumd, 1.0, 0, true), lump );
@@ -51,7 +57,13 @@
       translate(this.v1.x - shift * v2.x, this.v1.y - shift * v2.y);
       rotate( rotation );
       fill( hue, sat, lum, alpha );
-      rect(0, 0, radius, radius, roundoff);
+
+      if ( poly ) {
+        polygon(0, 0, radius / 2, corners);
+      } else {
+        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+      }
+
       pop();
     }
   };
@@ -103,6 +115,19 @@
         dots[i].show();
       }
     }
+  }
+
+  // polygon function
+
+  function polygon(x, y, pRadius, npoints) {
+    let angle = 360 / npoints;
+    beginShape();
+    for (let ang = 0; ang < 360; ang += angle) {
+      let sx = x + cos(ang) * pRadius;
+      let sy = y + sin(ang) * pRadius;
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
   }
 
   // resize function

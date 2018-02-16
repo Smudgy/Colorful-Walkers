@@ -1,7 +1,7 @@
 window.wallpaperPropertyListener = {
   applyUserProperties: function(properties) {
     if (properties.spacing) {
-      n = properties.spacing.value;
+      n = Math.max( properties.spacing.value, 25 );
       // clear the grid and make a new one
       dots = [];
       setup();
@@ -80,6 +80,22 @@ window.wallpaperPropertyListener = {
       hueLoop = properties.hueLoop.value / 10.0;
     }
 
+    if (properties.rot1) {
+      rot1 = properties.rot1.value;
+    }
+    if (properties.rot2) {
+      rot2 = properties.rot2.value;
+    }
+    if (properties.rotd) {
+      rotd = properties.rotd.value * 100;
+    }
+    if (properties.rotp) {
+      rotp = 5.0 / ( 10.0 / ( properties.rotp.value + 6 ));
+    }
+    if (properties.rotLoop) {
+      rotLoop = properties.rotLoop.value / 10.0;
+    }
+
     if (properties.sat1) {
       sat1 = properties.sat1.value;
     }
@@ -119,20 +135,46 @@ window.wallpaperPropertyListener = {
       ap = 5.0 / ( 10.0 / ( properties.ap.value + 6 ));
     }
 
-    if (properties.rot1) {
-      rot1 = properties.rot1.value;
+    if (properties.rat1) {
+      if (properties.rat1.value > 0) {
+        rat1 = Math.sqrt( properties.rat1.value / 2 );
+      } else if (properties.rat1.value < 0) {
+        rat1 = 1 / Math.sqrt( -properties.rat1.value / 2 );
+      } else {
+        rat1 = 1;
+      }
     }
-    if (properties.rot2) {
-      rot2 = properties.rot2.value;
+    if (properties.rat2) {
+      if (properties.rat2.value > 0) {
+        rat2 = Math.sqrt( properties.rat2.value / 2);
+      } else if (properties.rat2.value < 0) {
+        rat2 = 1 / Math.sqrt( -properties.rat2.value / 2 );
+      } else {
+        rat2 = 1;
+      }
     }
-    if (properties.rotd) {
-      rotd = properties.rotd.value * 100;
+    if (properties.ratd) {
+      ratd = properties.ratd.value * 100;
     }
-    if (properties.rotp) {
-      rotp = 5.0 / ( 10.0 / ( properties.rotp.value + 6 ));
+    if (properties.ratp) {
+      ratp = 5.0 / ( 10.0 / ( properties.ratp.value + 6 ));
     }
-    if (properties.rotLoop) {
-      rotLoop = properties.rotLoop.value / 10.0;
+
+    if (properties.poly) {
+      poly = properties.poly.value;
+    }
+
+    if (properties.corn1) {
+      corn1 = properties.corn1.value;
+    }
+    if (properties.corn2) {
+      corn2 = properties.corn2.value;
+    }
+    if (properties.cornd) {
+      cornd = properties.cornd.value * 100;
+    }
+    if (properties.cornp) {
+      cornp = 5.0 / ( 10.0 / ( properties.cornp.value + 6 ));
     }
   }
 };
@@ -189,6 +231,12 @@ let a2 = 1.0;
 let ad = 500;
 let ap = 5;
 
+// Corners ( 1 - inf )
+let corn1 = 3;
+let corn2 = 8;
+let cornd = 500;
+let cornp = 2;
+
 // rotation ( 0 - inf )
 let rot1 = 0;
 let rot2 = 360;
@@ -196,6 +244,13 @@ let rotd = 800;
 let rotp = 0.9;
 let rotLoop = 0.5;
 
-let n = 25;
+// ratio of squares, w/h ( > 0 )
+let rat1 = Math.sqrt( 3 );
+let rat2 = Math.sqrt( 1 );
+let ratd = 300;
+let ratp = 1;
+
+let n = 40;
 let hex = true;
-let circleMask = 3000.0;
+let circleMask = 600.0;
+let poly = false;
