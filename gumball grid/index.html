@@ -21,6 +21,34 @@
   <script src="js/varInit.js"></script>
   <script>
 
+  // Sinedot class
+  class Sinedot {
+    constructor( amp, freq, speed, delay ) {
+      this.amp = amp;
+      this.freq = freq;
+      this.speed = speed;
+      this.delay = delay;
+      this.timer = delay;
+      this.v1 = createVector( w/2 - maxDist - circleMask/2, h/2);
+      this.phase = Math.random() * 360;
+    }
+
+    move() {
+      if ( this.timer > 0){
+        this.timer--;
+      } else {
+        this.v1.x += this.speed;
+        this.v1.y = h/2 + this.amp * sin( this.freq * this.v1.x + this.phase );
+      }
+
+      if ( this.v1.x > w/2 + maxDist + circleMask/2) {
+        this.v1.x = w/2 - maxDist - circleMask/2;
+        this.phase = Math.random() * 360;
+        this.timer = this.delay;
+      }
+    }
+  }
+
   // Dot class
 
   class Dot {
@@ -30,7 +58,13 @@
     }
 
     show() {
-      let v2 = createVector(mouseX - this.v1.x, mouseY - this.v1.y);
+      let v2;
+      if ( movingDot ) {
+        v2 = createVector(movingDot.v1.x - this.v1.x, movingDot.v1.y - this.v1.y);
+      } else {
+        v2 = createVector(mouseX - this.v1.x, mouseY - this.v1.y);
+      }
+
       let d = v2.mag();
       v2.normalize();
 
@@ -41,7 +75,7 @@
       let corners = corn1 + (corn2 - corn1) * pow(map(d, 0, cornd, 1.0, 0, true), cornp); // poly only
 
       // orientation
-      let shift = sh1 + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
+      let shift = sh1 * map(d, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
       let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
 
       // color
@@ -98,6 +132,7 @@
       }
     }
 
+    movingDot = new Sinedot( 100, 2, 6, 60 );
     // middle dot for debugging
     //dots.push(new Dot(w/2, h/2));
   }
@@ -115,6 +150,8 @@
         dots[i].show();
       }
     }
+
+    movingDot.move();
   }
 
   // polygon function

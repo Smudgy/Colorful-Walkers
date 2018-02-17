@@ -33,6 +33,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.shd) {
       shd = properties.shd.value * 100;
+      if ( shd > maxDist ) {
+        maxDist = shd;
+      }
     }
     if (properties.shp) {
       shp = 5.0 / ( 10.0 / ( properties.shp.value + 6 ));
@@ -46,6 +49,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.radd) {
       radd = properties.radd.value * 100;
+      if ( radd > maxDist ) {
+        maxDist = radd;
+      }
     }
     if (properties.radp) {
       radp = 5.0 / ( 10.0 / ( properties.radp.value + 6 ));
@@ -59,6 +65,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.roud) {
       roud = properties.roud.value * 100;
+      if ( roud > maxDist ) {
+        maxDist = roud;
+      }
     }
     if (properties.roup) {
       roup = 5.0 / ( 10.0 / ( properties.roup.value + 6 ));
@@ -72,6 +81,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.hued) {
       hued = properties.hued.value * 100;
+      if ( hued > maxDist ) {
+        maxDist = hued;
+      }
     }
     if (properties.huep) {
       huep = 5.0 / ( 10.0 / ( properties.huep.value + 6 ));
@@ -88,6 +100,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.rotd) {
       rotd = properties.rotd.value * 100;
+      if ( rotd > maxDist ) {
+        maxDist = rotd;
+      }
     }
     if (properties.rotp) {
       rotp = 5.0 / ( 10.0 / ( properties.rotp.value + 6 ));
@@ -104,6 +119,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.satd) {
       satd = properties.satd.value * 100;
+      if ( satd > maxDist ) {
+        maxDist = satd;
+      }
     }
     if (properties.satp) {
       satp = 5.0 / ( 10.0 / ( properties.satp.value + 6 ));
@@ -117,6 +135,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.lumd) {
       lumd = properties.lumd.value * 100;
+      if ( lumd > maxDist ) {
+        maxDist = lumd;
+      }
     }
     if (properties.lump) {
       lump = 5.0 / ( 10.0 / ( properties.lump.value + 6 ));
@@ -130,6 +151,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.ad) {
       ad = properties.ad.value * 100;
+      if ( ad > maxDist ) {
+        maxDist = ad;
+      }
     }
     if (properties.ap) {
       ap = 5.0 / ( 10.0 / ( properties.ap.value + 6 ));
@@ -155,6 +179,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.ratd) {
       ratd = properties.ratd.value * 100;
+      if ( ratd > maxDist ) {
+        maxDist = ratd;
+      }
     }
     if (properties.ratp) {
       ratp = 5.0 / ( 10.0 / ( properties.ratp.value + 6 ));
@@ -172,6 +199,9 @@ window.wallpaperPropertyListener = {
     }
     if (properties.cornd) {
       cornd = properties.cornd.value * 100;
+      if ( cornd > maxDist ) {
+        maxDist = cornd;
+      }
     }
     if (properties.cornp) {
       cornp = 5.0 / ( 10.0 / ( properties.cornp.value + 6 ));
@@ -185,6 +215,7 @@ window.wallpaperPropertyListener = {
 let w = window.innerWidth;
 let h = window.innerHeight;
 let dots = [];
+let movingDot;
 
 // customizable variables
 
@@ -196,7 +227,7 @@ let radp = 4;
 
 // shift ( 0 - inf )
 let sh1 = -50;
-let sh2 = 0;
+let sh2 = 50;
 let shd = 300;
 let shp = 2;
 
@@ -238,14 +269,14 @@ let cornd = 500;
 let cornp = 2;
 
 // rotation ( 0 - inf )
-let rot1 = 0;
+let rot1 = 45;
 let rot2 = 360;
-let rotd = 800;
-let rotp = 0.9;
-let rotLoop = 0.5;
+let rotd = 500;
+let rotp = 1;
+let rotLoop = 0;
 
 // ratio of squares, w/h ( > 0 )
-let rat1 = Math.sqrt( 3 );
+let rat1 = Math.sqrt( 1 );
 let rat2 = Math.sqrt( 1 );
 let ratd = 300;
 let ratp = 1;
@@ -254,3 +285,4 @@ let n = 40;
 let hex = true;
 let circleMask = 600.0;
 let poly = false;
+let maxDist = Math.max( shd, roud, hued, radd, ratd, cornd, rotd, satd, lumd, ad);
