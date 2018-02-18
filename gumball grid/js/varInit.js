@@ -17,6 +17,9 @@ window.wallpaperPropertyListener = {
       // clear the grid and make a new one
       dots = [];
       setup();
+      circleShow = true;
+      clearTimeout(circleTimer);
+      circleTimer = setTimeout(function(){ circleShow = false; }, 1000);
     }
 
     if (properties.sh1) {
@@ -206,6 +209,35 @@ window.wallpaperPropertyListener = {
     if (properties.cornp) {
       cornp = 5.0 / ( 10.0 / ( properties.cornp.value + 6 ));
     }
+
+    if (properties.sinedot) {
+      sinedot = properties.sinedot.value;
+      sinedotShow = true;
+    }
+    if (properties.amp) {
+      amp = properties.amp.value * 10;
+      movingDot = new Sinedot( amp, freq, speed, delay );
+      sinedotShow = true;
+    }
+    if (properties.freq) {
+      freq = properties.freq.value / 10.0;
+      movingDot = new Sinedot( amp, freq, speed, delay );
+      sinedotShow = true;
+    }
+    if (properties.speed) {
+      speed = properties.speed.value;
+      movingDot = new Sinedot( amp, freq, speed, delay );
+      sinedotShow = true;
+    }
+    if (properties.delay) {
+      delay = properties.delay.value * 10;
+      movingDot = new Sinedot( amp, freq, speed, delay );
+      sinedotShow = true;
+    }
+
+    if (properties.mousetrigger) {
+      mouseTrigger = properties.mousetrigger.value;
+    }
   }
 };
 
@@ -216,6 +248,7 @@ let w = window.innerWidth;
 let h = window.innerHeight;
 let dots = [];
 let movingDot;
+let circleTimer;
 
 // customizable variables
 
@@ -285,4 +318,12 @@ let n = 40;
 let hex = true;
 let circleMask = 600.0;
 let poly = false;
+let sinedot = true;
+let sinedotShow = false;
+let circleShow = false;
+let mouseTrigger = true;
+let amp = 85;
+let freq = 1;
+let speed = 6;
+let delay = 120;
 let maxDist = Math.max( shd, roud, hued, radd, ratd, cornd, rotd, satd, lumd, ad);

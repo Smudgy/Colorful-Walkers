@@ -45,7 +45,13 @@
         this.v1.x = w/2 - maxDist - circleMask/2;
         this.phase = Math.random() * 360;
         this.timer = this.delay;
+        sinedotShow = false;
       }
+    }
+
+    show() {
+      fill( 255, 255, 255, 255 );
+      ellipse( this.v1.x, this.v1.y, 12, 12);
     }
   }
 
@@ -57,16 +63,16 @@
       this.anchDist = createVector(w/2 - x, h/2 - y).mag();
     }
 
-    show() {
-      let v2;
-      if ( movingDot ) {
-        v2 = createVector(movingDot.v1.x - this.v1.x, movingDot.v1.y - this.v1.y);
-      } else {
-        v2 = createVector(mouseX - this.v1.x, mouseY - this.v1.y);
-      }
-
-      let d = v2.mag();
+    showDuo() {
+      let v2 = createVector( mouseX - this.v1.x, mouseY - this.v1.y );
+      let d2 = v2.mag();
+      let v3 = createVector( movingDot.v1.x - this.v1.x, movingDot.v1.y - this.v1.y );
+      let d3 = v3.mag();
+      let d = Math.min( d2, d3 );
       v2.normalize();
+      v3.normalize();
+      let shiftMouse = sh1 * map(d2, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d2, 0, shd, 1.0, 0, true), shp);
+      let shiftSine = sh1 * map(d3, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d3, 0, shd, 1.0, 0, true), shp);
 
       // shape
       let radius = Math.max( rad1 + (rad2 - rad1) * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
@@ -75,7 +81,6 @@
       let corners = corn1 + (corn2 - corn1) * pow(map(d, 0, cornd, 1.0, 0, true), cornp); // poly only
 
       // orientation
-      let shift = sh1 * map(d, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
       let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
 
       // color
@@ -88,7 +93,83 @@
 
       push();
       colorMode(HSB);
-      translate(this.v1.x - shift * v2.x, this.v1.y - shift * v2.y);
+      translate(this.v1.x - shiftMouse * ( v2.x ) - shiftSine * ( v3.x ), this.v1.y - shiftMouse * ( v2.y ) - shiftSine * ( v3.y ));
+      rotate( rotation );
+      fill( hue, sat, lum, alpha );
+
+      if ( poly ) {
+        polygon(0, 0, radius / 2, corners);
+      } else {
+        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+      }
+
+      pop();
+    }
+
+    showSine() {
+      let v2 = createVector( movingDot.v1.x - this.v1.x, movingDot.v1.y - this.v1.y );
+      let d = v2.mag();
+      v2.normalize();
+      let shift = sh1 * map(d, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
+
+      // shape
+      let radius = Math.max( rad1 + (rad2 - rad1) * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
+      let roundoff = Math.max( ( rou1 + (rou2 - rou1) * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 ); // squares only
+      let ratio = rat1 + (rat2 - rat1) * pow(map(d, 0, ratd, 1.0, 0, true), ratp); // squares only
+      let corners = corn1 + (corn2 - corn1) * pow(map(d, 0, cornd, 1.0, 0, true), cornp); // poly only
+
+      // orientation
+      let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
+
+      // color
+      let hue = ((( hue1 + (hue2 - hue1) * pow(map(d, 0, hued, 1.0, 0, true), huep) + hueLoop * frameCount ) % 360 ) + 360 ) % 360;
+      let sat = sat1 + (sat2 - sat1) * pow(map(d, 0, satd, 1.0, 0, true), satp );
+      let lum = lum1 + (lum2 - lum1) * pow(map(d, 0, lumd, 1.0, 0, true), lump );
+      let alpha = a1 + (a2 - a1) * pow(map(d, 0, ad, 1.0, 0, true), ap);
+
+      noStroke();
+
+      push();
+      colorMode(HSB);
+      translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
+      rotate( rotation );
+      fill( hue, sat, lum, alpha );
+
+      if ( poly ) {
+        polygon(0, 0, radius / 2, corners);
+      } else {
+        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+      }
+
+      pop();
+    }
+
+    showMouse() {
+      let v2 = createVector( mouseX - this.v1.x, mouseY - this.v1.y );
+      let d = v2.mag();
+      v2.normalize();
+      let shift = sh1 * map(d, 0, maxDist, 1.0, 0, true) + (sh2 - sh1) * pow(map(d, 0, shd, 1.0, 0, true), shp);
+
+      // shape
+      let radius = Math.max( rad1 + (rad2 - rad1) * pow(map(d, 0, radd, 1.0, 0, true), radp), 0 );
+      let roundoff = Math.max( ( rou1 + (rou2 - rou1) * pow(map(d, 0, roud, 1.0, 0, true), roup)) * radius / 200, 0 ); // squares only
+      let ratio = rat1 + (rat2 - rat1) * pow(map(d, 0, ratd, 1.0, 0, true), ratp); // squares only
+      let corners = corn1 + (corn2 - corn1) * pow(map(d, 0, cornd, 1.0, 0, true), cornp); // poly only
+
+      // orientation
+      let rotation = ( rot1 + rot2 * pow(map(d, 0, rotd, 1.0, 0, true), rotp) + rotLoop * frameCount ) % 360;
+
+      // color
+      let hue = ((( hue1 + (hue2 - hue1) * pow(map(d, 0, hued, 1.0, 0, true), huep) + hueLoop * frameCount ) % 360 ) + 360 ) % 360;
+      let sat = sat1 + (sat2 - sat1) * pow(map(d, 0, satd, 1.0, 0, true), satp );
+      let lum = lum1 + (lum2 - lum1) * pow(map(d, 0, lumd, 1.0, 0, true), lump );
+      let alpha = a1 + (a2 - a1) * pow(map(d, 0, ad, 1.0, 0, true), ap);
+
+      noStroke();
+
+      push();
+      colorMode(HSB);
+      translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
       rotate( rotation );
       fill( hue, sat, lum, alpha );
 
@@ -132,7 +213,7 @@
       }
     }
 
-    movingDot = new Sinedot( 100, 2, 6, 60 );
+    movingDot = new Sinedot( amp, freq, speed, delay );
     // middle dot for debugging
     //dots.push(new Dot(w/2, h/2));
   }
@@ -140,18 +221,38 @@
   function draw() {
     push();
     colorMode(HSB);
-    background(200, 30, 10);
+    background(200, 30, 0);
     pop();
+
+    if ( circleShow ){
+      showCircle();
+    }
 
     for (let i = 0; i < dots.length; i++) {
       if ( dots[i].anchDist > circleMask / 2 ) {
         dots.splice(i,1);
-      } else {
-        dots[i].show();
+      } else if ( sinedot && mouseTrigger ) {
+        dots[i].showDuo();
+      } else if ( mouseTrigger ) {
+        dots[i].showMouse();
+      } else if ( sinedot ) {
+        dots[i].showSine();
       }
     }
 
-    movingDot.move();
+    if ( sinedot && sinedotShow ) {
+      movingDot.move();
+      movingDot.show();
+    } else if ( sinedot ) {
+      movingDot.move();
+    }
+  }
+
+  function showCircle() {
+    stroke(255);
+    strokeWeight(4);
+    noFill();
+    ellipse( w/2, h/2, circleMask, circleMask);
   }
 
   // polygon function

@@ -44,6 +44,64 @@
 				"type" : "bool",
 				"value" : true
 			},
+			"sinedot" :
+			{
+				"order" : 3.5,
+				"text" : "Sinewave moving across the grid",
+				"type" : "bool",
+				"value" : false
+			},
+			"mousetrigger" :
+			{
+				"order" : 3.7,
+				"text" : "Effects on mouse",
+				"type" : "bool",
+				"value" : true
+			},
+			"amp" :
+			{
+				"condition" : "sinedot.value == true",
+				"editable" : true,
+				"max" : 20,
+				"min" : 1,
+				"order" : 3.61,
+				"text" : "Sine amplitude",
+				"type" : "slider",
+				"value" : 9
+			},
+			"freq" :
+			{
+				"condition" : "sinedot.value == true",
+				"editable" : true,
+				"max" : 30,
+				"min" : 1,
+				"order" : 3.62,
+				"text" : "Sine frequency",
+				"type" : "slider",
+				"value" : 1
+			},
+			"speed" :
+			{
+				"condition" : "sinedot.value == true",
+				"editable" : true,
+				"max" : 10,
+				"min" : 1,
+				"order" : 3.63,
+				"text" : "Sine speed",
+				"type" : "slider",
+				"value" : 5
+			},
+			"delay" :
+			{
+				"condition" : "sinedot.value == true",
+				"editable" : true,
+				"max" : 60,
+				"min" : 0,
+				"order" : 3.64,
+				"text" : "Delay between waves",
+				"type" : "slider",
+				"value" : 12
+			},
 			"circle" :
 			{
 				"editable" : true,
