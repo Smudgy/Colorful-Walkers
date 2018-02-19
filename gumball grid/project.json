@@ -6,6 +6,19 @@
 	{
 		"properties" :
 		{
+			"gridprop" :
+			{
+				"order" : 0.5,
+				"text" : "<h1><b>• Grid properties</b></h1>",
+				"type" : "text"
+			},
+			"bgColor" :
+			{
+				"order" : 0.9,
+				"text" : "Background color",
+				"type" : "color",
+				"value" : "0 1 0.5"
+			},
 			"spacing" :
 			{
 				"editable" : true,
@@ -18,7 +31,7 @@
 			},
 			"hex" :
 			{
-				"order" : 1.1,
+				"order" : 0.95,
 				"text" : "Hexagon grid",
 				"type" : "bool",
 				"value" : true
@@ -33,7 +46,7 @@
 			"polygon2" :
 			{
 				"condition" : "poly.value == false",
-				"order" : 19,
+				"order" : 19.1,
 				"text" : "With polygons disabled, all shapes are rectangles, and you will be able to customize the <b>w/h ratio</b> and the <b>roundness</b> of the corners.",
 				"type" : "text"
 			},
@@ -47,16 +60,31 @@
 			"sinedot" :
 			{
 				"order" : 3.5,
-				"text" : "Sinewave moving across the grid",
+				"text" : "Effects on sinewave",
 				"type" : "bool",
 				"value" : false
+			},
+			"sinedot2" :
+			{
+				"condition" : "sinedot.value == true",
+				"order" : 3.69,
+				"text" : "<br>While using the sinewave, the horizontal start value depends on the size of the circle mask and the maximum of all the distances for the effects. <br>
+				This is done to create the smoothest transition possible.",
+				"type" : "text"
 			},
 			"mousetrigger" :
 			{
 				"order" : 3.7,
-				"text" : "Effects on mouse",
+				"text" : "Effects on mouse/pointer",
 				"type" : "bool",
 				"value" : true
+			},
+			"fps" :
+			{
+				"order" : 3.8,
+				"text" : "Show fps",
+				"type" : "bool",
+				"value" : false
 			},
 			"amp" :
 			{
@@ -107,10 +135,20 @@
 				"editable" : true,
 				"max" : 40,
 				"min" : 1,
-				"order" : 1,
+				"order" : 1.1,
 				"text" : "Circle mask",
 				"type" : "slider",
 				"value" : 5
+			},
+			"shapeprop" :
+			{
+				"order" : 9.9,
+				"text" : "<h1><b>• Shape properties</b></h1><br>
+				<u>Base values</u>: default values. <br>
+				<u>On mouse/sine</u>: values when the shape lines up with the mouse/sine. <br>
+				<u>Distance</u>: distance from mouse/sine where the effect starts ( x 10 ). <br>
+				<u>Curve</u>: How fast the effect decays over the distance ( using exponentials ).",
+				"type" : "text"
 			},
 			"size" :
 			{
@@ -134,7 +172,7 @@
 				"max" : 100,
 				"min" : -10,
 				"order" : 10.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 40
 			},
@@ -183,7 +221,7 @@
 				"max" : 8,
 				"min" : -8,
 				"order" : 20.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 0
 			},
@@ -234,7 +272,7 @@
 				"max" : 10,
 				"min" : 3,
 				"order" : 20.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 6
 			},
@@ -282,7 +320,7 @@
 				"max" : 100,
 				"min" : -100,
 				"order" : 30.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 65
 			},
@@ -331,7 +369,7 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 21.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 100
 			},
@@ -357,10 +395,16 @@
 				"type" : "slider",
 				"value" : 1
 			},
+			"colorprop" :
+			{
+				"order" : 49.9,
+				"text" : "<hr><h1><b>• Colors</b></h3>",
+				"type" : "text"
+			},
 			"hue" :
 			{
 				"order" : 50,
-				"text" : "<hr><h3><b>Hue</b></h3>Hue of the shapes.<br> <b>0 or 360</b> is red, <b>120</b> is green, <b>240</b> is blue.",
+				"text" : "<h3><b>Hue</b></h3>Hue of the shapes.<br> <b>0 or 360</b> is red, <b>120</b> is green, <b>240</b> is blue.",
 				"type" : "text"
 			},
 			"hue1" :
@@ -379,7 +423,7 @@
 				"max" : 720,
 				"min" : -720,
 				"order" : 50.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 150
 			},
@@ -435,7 +479,7 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 60.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 100
 			},
@@ -481,7 +525,7 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 70.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 100
 			},
@@ -527,7 +571,7 @@
 				"max" : 100,
 				"min" : 0,
 				"order" : 80.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 100
 			},
@@ -554,7 +598,10 @@
 			"rotation" :
 			{
 				"order" : 35,
-				"text" : "<hr><h3><b>Rotation</b></h3>Orientation of the shapes in degrees.<br> <b>0 or 360</b> is square edges parallel to the screen/window.",
+				"text" : "<hr><h3><b>Rotation</b></h3>Orientation of the shapes in degrees.<br>
+				<b>0 or 360</b> is square edges parallel to the screen/window.<br>
+				<br>Unlike other shape properties, the <u>On mouse/sine</u> value adds up to the <u>Base value</u>.
+				Hence for a static rotation this should be 0.",
 				"type" : "text"
 			},
 			"rot1" :
@@ -573,7 +620,7 @@
 				"max" : 720,
 				"min" : -720,
 				"order" : 35.2,
-				"text" : "On mouse",
+				"text" : "On mouse/sine",
 				"type" : "slider",
 				"value" : 720
 			},
@@ -608,12 +655,9 @@
 				"value" : 3
 			},
 		},
-		"supportsaudioprocessing" : true
+		"supportsaudioprocessing" : false
 	},
-	"monetization" : false,
-	"tags" : [ "Abstract" ],
-	"title" : "Grid",
-	"type" : "web",
-	"visibility" : "public",
-	"workshopid" : 1131881382
+	"preview" : "preview.gif",
+	"title" : "Polygrid",
+	"type" : "web"
 }

@@ -1,5 +1,11 @@
 window.wallpaperPropertyListener = {
   applyUserProperties: function(properties) {
+    if (properties.bgColor) {
+      let bgColor = properties.bgColor.value.split(' ');
+      bgColor_r = Math.ceil(bgColor[0] * 255);
+      bgColor_g = Math.ceil(bgColor[1] * 255);
+      bgColor_b = Math.ceil(bgColor[2] * 255);
+    }
     if (properties.spacing) {
       n = Math.max( properties.spacing.value, 25 );
       // clear the grid and make a new one
@@ -18,8 +24,9 @@ window.wallpaperPropertyListener = {
       dots = [];
       setup();
       circleShow = true;
-      clearTimeout(circleTimer);
-      circleTimer = setTimeout(function(){ circleShow = false; }, 1000);
+      // clear timer, make a new one
+      clearTimeout( circleTimer );
+      circleTimer = setTimeout(() => {circleShow = false;}, 1000);
     }
 
     if (properties.sh1) {
@@ -36,9 +43,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.shd) {
       shd = properties.shd.value * 100;
-      if ( shd > maxDist ) {
-        maxDist = shd;
-      }
+      calcMaxDist();
     }
     if (properties.shp) {
       shp = 5.0 / ( 10.0 / ( properties.shp.value + 6 ));
@@ -52,9 +57,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.radd) {
       radd = properties.radd.value * 100;
-      if ( radd > maxDist ) {
-        maxDist = radd;
-      }
+      calcMaxDist();
     }
     if (properties.radp) {
       radp = 5.0 / ( 10.0 / ( properties.radp.value + 6 ));
@@ -68,9 +71,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.roud) {
       roud = properties.roud.value * 100;
-      if ( roud > maxDist ) {
-        maxDist = roud;
-      }
+      calcMaxDist();
     }
     if (properties.roup) {
       roup = 5.0 / ( 10.0 / ( properties.roup.value + 6 ));
@@ -84,9 +85,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.hued) {
       hued = properties.hued.value * 100;
-      if ( hued > maxDist ) {
-        maxDist = hued;
-      }
+      calcMaxDist();
     }
     if (properties.huep) {
       huep = 5.0 / ( 10.0 / ( properties.huep.value + 6 ));
@@ -103,9 +102,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.rotd) {
       rotd = properties.rotd.value * 100;
-      if ( rotd > maxDist ) {
-        maxDist = rotd;
-      }
+      calcMaxDist();
     }
     if (properties.rotp) {
       rotp = 5.0 / ( 10.0 / ( properties.rotp.value + 6 ));
@@ -122,9 +119,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.satd) {
       satd = properties.satd.value * 100;
-      if ( satd > maxDist ) {
-        maxDist = satd;
-      }
+      calcMaxDist();
     }
     if (properties.satp) {
       satp = 5.0 / ( 10.0 / ( properties.satp.value + 6 ));
@@ -138,9 +133,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.lumd) {
       lumd = properties.lumd.value * 100;
-      if ( lumd > maxDist ) {
-        maxDist = lumd;
-      }
+      calcMaxDist();
     }
     if (properties.lump) {
       lump = 5.0 / ( 10.0 / ( properties.lump.value + 6 ));
@@ -154,9 +147,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.ad) {
       ad = properties.ad.value * 100;
-      if ( ad > maxDist ) {
-        maxDist = ad;
-      }
+      calcMaxDist();
     }
     if (properties.ap) {
       ap = 5.0 / ( 10.0 / ( properties.ap.value + 6 ));
@@ -182,9 +173,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.ratd) {
       ratd = properties.ratd.value * 100;
-      if ( ratd > maxDist ) {
-        maxDist = ratd;
-      }
+      calcMaxDist();
     }
     if (properties.ratp) {
       ratp = 5.0 / ( 10.0 / ( properties.ratp.value + 6 ));
@@ -192,6 +181,7 @@ window.wallpaperPropertyListener = {
 
     if (properties.poly) {
       poly = properties.poly.value;
+      calcMaxDist();
     }
 
     if (properties.corn1) {
@@ -202,9 +192,7 @@ window.wallpaperPropertyListener = {
     }
     if (properties.cornd) {
       cornd = properties.cornd.value * 100;
-      if ( cornd > maxDist ) {
-        maxDist = cornd;
-      }
+      calcMaxDist();
     }
     if (properties.cornp) {
       cornp = 5.0 / ( 10.0 / ( properties.cornp.value + 6 ));
@@ -238,6 +226,10 @@ window.wallpaperPropertyListener = {
     if (properties.mousetrigger) {
       mouseTrigger = properties.mousetrigger.value;
     }
+
+    if (properties.fps) {
+      fps = properties.fps.value;
+    }
   }
 };
 
@@ -247,83 +239,93 @@ window.wallpaperPropertyListener = {
 let w = window.innerWidth;
 let h = window.innerHeight;
 let dots = [];
+let fps = false;
 let movingDot;
 let circleTimer;
+let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
 
 // customizable variables
 
 // size / radius ( 0 - inf )
 let rad1 = 20;
 let rad2 = 30;
-let radd = 300;
+let radd = 500;
 let radp = 4;
 
 // shift ( 0 - inf )
 let sh1 = -50;
 let sh2 = 50;
-let shd = 300;
+let shd = 0;
 let shp = 2;
 
 // roundoff ( 0 - 100% )
 let rou1 = 20;
 let rou2 = 100;
-let roud = 400;
+let roud = 0;
 let roup = 0.4;
 
 // hue ( 0 - 360 )
 let hue1 = 180;
 let hue2 = 160;
-let hued = 300;
+let hued = 0;
 let huep = 2;
 let hueLoop = 0;
 
 // sat ( 0 - 100 )
 let sat1 = 50;
 let sat2 = 80;
-let satd = 300;
+let satd = 0;
 let satp = 2;
 
 // lum ( 0 - 100 )
 let lum1 = 20;
 let lum2 = 80;
-let lumd = 300;
+let lumd = 0;
 let lump = 2;
 
 // alpha ( 0.0 - 1.0 )
 let a1 = 1.0;
 let a2 = 1.0;
-let ad = 500;
+let ad = 0;
 let ap = 5;
 
 // Corners ( 1 - inf )
 let corn1 = 3;
 let corn2 = 8;
-let cornd = 500;
+let cornd = 0;
 let cornp = 2;
 
 // rotation ( 0 - inf )
 let rot1 = 45;
 let rot2 = 360;
-let rotd = 500;
+let rotd = 0;
 let rotp = 1;
 let rotLoop = 0;
 
 // ratio of squares, w/h ( > 0 )
 let rat1 = Math.sqrt( 1 );
 let rat2 = Math.sqrt( 1 );
-let ratd = 300;
+let ratd = 0;
 let ratp = 1;
 
 let n = 40;
 let hex = true;
 let circleMask = 600.0;
-let poly = false;
+let poly = true;
 let sinedot = true;
-let sinedotShow = false;
+let sinedotShow = true;
 let circleShow = false;
 let mouseTrigger = true;
 let amp = 85;
 let freq = 1;
 let speed = 6;
 let delay = 120;
-let maxDist = Math.max( shd, roud, hued, radd, ratd, cornd, rotd, satd, lumd, ad);
+let maxDist = Math.max( radd, shd, roud, hued, satd, lumd, ad, cornd, rotd, ratd);
+
+function calcMaxDist() {
+  if ( poly ) {
+    maxDist = Math.max( radd, shd, hued, satd, lumd, ad, cornd, rotd);
+  } else {
+    maxDist = Math.max( radd, shd, roud, hued, satd, lumd, ad, rotd, ratd);
+  }
+}

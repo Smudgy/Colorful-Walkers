@@ -29,7 +29,7 @@
       this.speed = speed;
       this.delay = delay;
       this.timer = delay;
-      this.v1 = createVector( w/2 - maxDist - circleMask/2, h/2);
+      this.v1 = createVector( w/2 - maxDist - circleMask / 2 , h/2);
       this.phase = Math.random() * 360;
     }
 
@@ -41,12 +41,16 @@
         this.v1.y = h/2 + this.amp * sin( this.freq * this.v1.x + this.phase );
       }
 
-      if ( this.v1.x > w/2 + maxDist + circleMask/2) {
-        this.v1.x = w/2 - maxDist - circleMask/2;
+      if ( this.v1.x > w / 2 + maxDist + circleMask / 2 ) {
+        this.v1.x = w / 2 - maxDist - circleMask / 2;
         this.phase = Math.random() * 360;
         this.timer = this.delay;
         sinedotShow = false;
       }
+
+      // textSize(16);
+      // fill(255, 255, 255);
+      // text(maxDist + ' ' + roud, 10, 30);
     }
 
     show() {
@@ -98,7 +102,8 @@
       fill( hue, sat, lum, alpha );
 
       if ( poly ) {
-        polygon(0, 0, radius / 2, corners);
+        rotate( 315 + v2.heading() );
+        polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, ratio * radius, radius / ratio, roundoff);
       }
@@ -136,7 +141,8 @@
       fill( hue, sat, lum, alpha );
 
       if ( poly ) {
-        polygon(0, 0, radius / 2, corners);
+        rotate( 315 );
+        polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, ratio * radius, radius / ratio, roundoff);
       }
@@ -174,7 +180,42 @@
       fill( hue, sat, lum, alpha );
 
       if ( poly ) {
-        polygon(0, 0, radius / 2, corners);
+        rotate( 315 + v2.heading() );
+        polygon(0, 0, radius * 0.7, corners);
+      } else {
+        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+      }
+
+      pop();
+    }
+
+    show() {
+      // shape
+      let radius = Math.max( rad1, 0 );
+      let roundoff = Math.max( rou1 * radius / 200, 0 ); // squares only
+      let ratio = rat1; // squares only
+      let corners = corn1; // poly only
+
+      // orientation
+      let rotation = (rot1 + rotLoop * frameCount ) % 360;
+
+      // color
+      let hue = ((( hue1 + hueLoop * frameCount ) % 360 ) + 360 ) % 360;
+      let sat = sat1;
+      let lum = lum1;
+      let alpha = a1;
+
+      noStroke();
+
+      push();
+      colorMode(HSB);
+      translate(this.v1.x, this.v1.y);
+      rotate( rotation );
+      fill( hue, sat, lum, alpha );
+
+      if ( poly ) {
+        rotate( 315 + v2.heading() );
+        polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, ratio * radius, radius / ratio, roundoff);
       }
@@ -220,8 +261,8 @@
 
   function draw() {
     push();
-    colorMode(HSB);
-    background(200, 30, 0);
+    colorMode(RGB);
+    background( bgColor_r, bgColor_g, bgColor_b );
     pop();
 
     if ( circleShow ){
@@ -237,6 +278,8 @@
         dots[i].showMouse();
       } else if ( sinedot ) {
         dots[i].showSine();
+      } else {
+        dots[i].show();
       }
     }
 
@@ -245,6 +288,12 @@
       movingDot.show();
     } else if ( sinedot ) {
       movingDot.move();
+    }
+
+    if ( fps ) {
+      textSize(12);
+      fill(255, 0, 0);
+      text(Math.floor(frameRate()), 20, 20);
     }
   }
 
