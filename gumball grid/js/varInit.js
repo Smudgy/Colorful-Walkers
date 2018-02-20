@@ -310,7 +310,7 @@ let ratp = 1;
 
 let n = 40;
 let hex = true;
-let circleMask = 600.0;
+let circleMask = 900.0;
 let poly = true;
 let sinedot = true;
 let sinedotShow = true;

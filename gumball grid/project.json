@@ -17,7 +17,7 @@
 				"order" : 0.9,
 				"text" : "Background color",
 				"type" : "color",
-				"value" : "0 1 0.5"
+				"value" : "0.03 0.03 0.03"
 			},
 			"spacing" :
 			{
@@ -27,7 +27,7 @@
 				"order" : 1,
 				"text" : "Grid spacing",
 				"type" : "slider",
-				"value" : 50
+				"value" : 40
 			},
 			"hex" :
 			{
@@ -62,7 +62,7 @@
 				"order" : 3.5,
 				"text" : "Effects on sinewave",
 				"type" : "bool",
-				"value" : false
+				"value" : true
 			},
 			"sinedot2" :
 			{
@@ -106,7 +106,7 @@
 				"order" : 3.62,
 				"text" : "Sine frequency",
 				"type" : "slider",
-				"value" : 1
+				"value" : 5
 			},
 			"speed" :
 			{
@@ -117,7 +117,7 @@
 				"order" : 3.63,
 				"text" : "Sine speed",
 				"type" : "slider",
-				"value" : 5
+				"value" : 7
 			},
 			"delay" :
 			{
@@ -128,7 +128,7 @@
 				"order" : 3.64,
 				"text" : "Delay between waves",
 				"type" : "slider",
-				"value" : 12
+				"value" : 6
 			},
 			"circle" :
 			{
@@ -138,7 +138,7 @@
 				"order" : 1.1,
 				"text" : "Circle mask",
 				"type" : "slider",
-				"value" : 5
+				"value" : 10
 			},
 			"shapeprop" :
 			{
@@ -274,7 +274,7 @@
 				"order" : 20.2,
 				"text" : "On mouse/sine",
 				"type" : "slider",
-				"value" : 6
+				"value" : 8
 			},
 			"cornd" :
 			{
@@ -296,7 +296,7 @@
 				"order" : 20.4,
 				"text" : "Curve",
 				"type" : "slider",
-				"value" : -1
+				"value" : -2
 			},
 			"shift" :
 			{
@@ -322,7 +322,7 @@
 				"order" : 30.2,
 				"text" : "On mouse/sine",
 				"type" : "slider",
-				"value" : 65
+				"value" : 55
 			},
 			"shd" :
 			{
@@ -653,7 +653,7 @@
 				"text" : "Rotation speed",
 				"type" : "slider",
 				"value" : 3
-			},
+			}
 		},
 		"supportsaudioprocessing" : false
 	},
