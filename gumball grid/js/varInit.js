@@ -154,22 +154,10 @@ window.wallpaperPropertyListener = {
     }
 
     if (properties.rat1) {
-      if (properties.rat1.value > 0) {
-        rat1 = Math.sqrt( properties.rat1.value / 2 );
-      } else if (properties.rat1.value < 0) {
-        rat1 = 1 / Math.sqrt( -properties.rat1.value / 2 );
-      } else {
-        rat1 = 1;
-      }
+      rat1 = rad1 * properties.rat1.value / 100;
     }
     if (properties.rat2) {
-      if (properties.rat2.value > 0) {
-        rat2 = Math.sqrt( properties.rat2.value / 2);
-      } else if (properties.rat2.value < 0) {
-        rat2 = 1 / Math.sqrt( -properties.rat2.value / 2 );
-      } else {
-        rat2 = 1;
-      }
+      rat2 = rad2 * properties.rat2.value / 100;
     }
     if (properties.ratd) {
       ratd = properties.ratd.value * 100;
@@ -230,6 +218,9 @@ window.wallpaperPropertyListener = {
     if (properties.fps) {
       fps = properties.fps.value;
     }
+    if (properties.blend) {
+      blend = properties.blend.value;
+    }
   }
 };
 
@@ -241,6 +232,7 @@ let h = window.innerHeight;
 let dots = [];
 let fps = false;
 let movingDot;
+let blend = 1;
 let circleTimer;
 let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
 

@@ -1,6 +1,8 @@
 {
+	"workshopid" : 1307337497,
 	"approved" : true,
-	"description" : "[Audio Responsive]\r\nDots dancing around on your screen, leaving a colorful trail behind.\r\nIncludes lots of customizable options.\r\n\r\nPlease upvote if you enjoy the wallpaper",
+	"contentrating" : "Everyone",
+	"description" : "Reactive grid of shapes",
 	"file" : "index.html",
 	"general" :
 	{
@@ -47,7 +49,7 @@
 			{
 				"condition" : "poly.value == false",
 				"order" : 19.1,
-				"text" : "With polygons disabled, all shapes are rectangles, and you will be able to customize the <b>w/h ratio</b> and the <b>roundness</b> of the corners.",
+				"text" : "With polygons disabled, all shapes are rectangles, and you will be able to change the <b>w/h ratio</b> and the <b>roundness</b> of the corners.",
 				"type" : "text"
 			},
 			"poly" :
@@ -200,15 +202,16 @@
 			{
 				"condition" : "poly.value == false",
 				"order" : 20,
-				"text" : "<hr><h3><b>W/h ratio</b></h3>Width / height ratio of the rectangles.",
+				"text" : "<hr><h3><b>W/h ratio</b></h3>Width / height ratio of the rectangles. <br>
+				(values do not exactly map to a ratio)",
 				"type" : "text"
 			},
 			"rat1" :
 			{
 				"condition" : "poly.value == false",
 				"editable" : true,
-				"max" : 8,
-				"min" : -8,
+				"max" : 100,
+				"min" : -100,
 				"order" : 20.1,
 				"text" : "Base value",
 				"type" : "slider",
@@ -218,8 +221,8 @@
 			{
 				"condition" : "poly.value == false",
 				"editable" : true,
-				"max" : 8,
-				"min" : -8,
+				"max" : 100,
+				"min" : -100,
 				"order" : 20.2,
 				"text" : "On mouse/sine",
 				"type" : "slider",
@@ -400,6 +403,68 @@
 				"order" : 49.9,
 				"text" : "<hr><h1><b>• Colors</b></h3>",
 				"type" : "text"
+			},
+			"blend" :
+			{
+				"options" :
+				[
+					{
+						"label" : "normal",
+						"value" : 1
+					},
+					{
+						"label" : "add",
+						"value" : 2
+					},
+					{
+						"label" : "darkest",
+						"value" : 3
+					},
+					{
+						"label" : "lightest",
+						"value" : 4
+					},
+					{
+						"label" : "difference",
+						"value" : 5
+					},
+					{
+						"label" : "exclusion",
+						"value" : 6
+					},
+					{
+						"label" : "multiply",
+						"value" : 7
+					},
+					{
+						"label" : "screen",
+						"value" : 8
+					},
+					{
+						"label" : "overlay",
+						"value" : 9
+					},
+					{
+						"label" : "hard light",
+						"value" : 10
+					},
+					{
+						"label" : "soft light",
+						"value" : 11
+					},
+					{
+						"label" : "dodge",
+						"value" : 12
+					},
+					{
+						"label" : "burn",
+						"value" : 13
+					}
+				],
+				"order" : 49.99,
+				"text" : "Shapes blendmode",
+				"type" : "combo",
+				"value" : 1
 			},
 			"hue" :
 			{
@@ -657,7 +722,10 @@
 		},
 		"supportsaudioprocessing" : false
 	},
+	"monetization" : false,
 	"preview" : "preview.gif",
+	"tags" : [ "Abstract" ],
 	"title" : "Polygrid",
-	"type" : "web"
+	"type" : "web",
+	"visibility" : "public"
 }

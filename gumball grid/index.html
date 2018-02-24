@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body style="background-color: black;">
   <script src="js/p5.js"></script>
   <script src="js/varInit.js"></script>
   <script>
@@ -97,6 +97,8 @@
 
       push();
       colorMode(HSB);
+      setBlend();
+
       translate(this.v1.x - shiftMouse * ( v2.x ) - shiftSine * ( v3.x ), this.v1.y - shiftMouse * ( v2.y ) - shiftSine * ( v3.y ));
       rotate( rotation );
       fill( hue, sat, lum, alpha );
@@ -105,7 +107,7 @@
         rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
       }
 
       pop();
@@ -136,6 +138,8 @@
 
       push();
       colorMode(HSB);
+      setBlend();
+
       translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
       rotate( rotation );
       fill( hue, sat, lum, alpha );
@@ -144,7 +148,7 @@
         rotate( 315 );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
       }
 
       pop();
@@ -175,6 +179,8 @@
 
       push();
       colorMode(HSB);
+      setBlend();
+
       translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
       rotate( rotation );
       fill( hue, sat, lum, alpha );
@@ -183,7 +189,7 @@
         rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
       }
 
       pop();
@@ -265,10 +271,6 @@
     background( bgColor_r, bgColor_g, bgColor_b );
     pop();
 
-    if ( circleShow ){
-      showCircle();
-    }
-
     for (let i = 0; i < dots.length; i++) {
       if ( dots[i].anchDist > circleMask / 2 ) {
         dots.splice(i,1);
@@ -290,10 +292,60 @@
       movingDot.move();
     }
 
+    if ( circleShow ){
+      showCircle();
+    }
+
     if ( fps ) {
       textSize(12);
       fill(255, 0, 0);
       text(Math.floor(frameRate()), 20, 20);
+    }
+  }
+
+  function setBlend() {
+    switch(blend) {
+      case 1:
+        blendMode(BLEND);
+        break;
+      case 2:
+        blendMode(ADD);
+        break;
+      case 3:
+        blendMode(DARKEST);
+        break;
+      case 4:
+        blendMode(LIGHTEST);
+        break;
+      case 5:
+        blendMode(DIFFERENCE);
+        break;
+      case 6:
+        blendMode(EXCLUSION);
+        break;
+      case 7:
+        blendMode(MULTIPLY);
+        break;
+      case 8:
+        blendMode(SCREEN);
+        break;
+      case 9:
+        blendMode(OVERLAY);
+        break;
+      case 10:
+        blendMode(HARD_LIGHT);
+        break;
+      case 11:
+        blendMode(SOFT_LIGHT);
+        break;
+      case 12:
+        blendMode(DODGE);
+        break;
+      case 13:
+        blendMode(BURN);
+        break;
+      default:
+        blendMode(BLEND);
     }
   }
 
