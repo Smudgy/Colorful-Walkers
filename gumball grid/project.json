@@ -14,9 +14,36 @@
 				"text" : "<h1><b>• Grid properties</b></h1>",
 				"type" : "text"
 			},
+			"bgMode":
+			{
+				"options" :
+				[
+					{
+						"label" : "color",
+						"value" : false
+					},
+					{
+						"label" : "image",
+						"value" : true
+					}
+				],
+				"order" : 0.9,
+				"text" : "Background mode",
+				"type" : "combo",
+				"value" : 1
+			},
+			"Image" :
+      {
+				"condition" : "bgMode.value == true",
+        "text" : "Background image",
+        "type" : "file",
+				"order" : 0.91,
+				"value" : "bg.jpg"
+      },
 			"bgColor" :
 			{
-				"order" : 0.9,
+				"condition" : "bgMode.value == false",
+				"order" : 0.91,
 				"text" : "Background color",
 				"type" : "color",
 				"value" : "0.03 0.03 0.03"

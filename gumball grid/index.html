@@ -269,6 +269,10 @@
     push();
     colorMode(RGB);
     background( bgColor_r, bgColor_g, bgColor_b );
+    if ( bgMode ) {
+      let bg = loadImage(bgImage);
+      background(bg);
+    }
     pop();
 
     for (let i = 0; i < dots.length; i++) {

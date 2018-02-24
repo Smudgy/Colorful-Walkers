@@ -1,11 +1,18 @@
 window.wallpaperPropertyListener = {
   applyUserProperties: function(properties) {
+    if (properties.bgMode) {
+      bgMode = properties.bgMode.value;
+    }
+    if (properties.Image) {
+      bgImage = properties.Image.value;
+    }
     if (properties.bgColor) {
       let bgColor = properties.bgColor.value.split(' ');
       bgColor_r = Math.ceil(bgColor[0] * 255);
       bgColor_g = Math.ceil(bgColor[1] * 255);
       bgColor_b = Math.ceil(bgColor[2] * 255);
     }
+
     if (properties.spacing) {
       n = Math.max( properties.spacing.value, 25 );
       // clear the grid and make a new one
@@ -238,6 +245,8 @@ let fps = false;
 let movingDot;
 let blend = 1;
 let circleTimer;
+let bgImage = 'bg.jpg';
+let bgMode = true;
 let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
 
 // customizable variables
