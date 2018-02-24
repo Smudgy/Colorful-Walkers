@@ -107,7 +107,7 @@
         rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
+        rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
       }
 
       pop();
@@ -148,7 +148,7 @@
         rotate( 315 );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
+        rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
       }
 
       pop();
@@ -189,7 +189,7 @@
         rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, radius + Math.ceil(ratio), radius - Math.floor(ratio), roundoff);
+        rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
       }
 
       pop();
@@ -223,7 +223,7 @@
         rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
-        rect(0, 0, ratio * radius, radius / ratio, roundoff);
+        rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
       }
 
       pop();

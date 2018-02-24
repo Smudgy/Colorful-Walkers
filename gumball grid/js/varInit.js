@@ -51,9 +51,11 @@ window.wallpaperPropertyListener = {
 
     if (properties.rad1) {
       rad1 = properties.rad1.value;
+      updateRatio();
     }
     if (properties.rad2) {
       rad2 = properties.rad2.value;
+      updateRatio();
     }
     if (properties.radd) {
       radd = properties.radd.value * 100;
@@ -154,9 +156,11 @@ window.wallpaperPropertyListener = {
     }
 
     if (properties.rat1) {
+      rt1 = properties.rat1.value;
       rat1 = rad1 * properties.rat1.value / 100;
     }
     if (properties.rat2) {
+      rt2 = properties.rat2.value;
       rat2 = rad2 * properties.rat2.value / 100;
     }
     if (properties.ratd) {
@@ -295,8 +299,10 @@ let rotp = 1;
 let rotLoop = 0;
 
 // ratio of squares, w/h ( > 0 )
-let rat1 = Math.sqrt( 1 );
-let rat2 = Math.sqrt( 1 );
+let rt1 = 0;
+let rt2 = 0;
+let rat1 = 0;
+let rat2 = 0;
 let ratd = 0;
 let ratp = 1;
 
@@ -320,4 +326,9 @@ function calcMaxDist() {
   } else {
     maxDist = Math.max( radd, shd, roud, hued, satd, lumd, ad, rotd, ratd);
   }
+}
+
+function updateRatio() {
+  rat1 = rad1 * rt1 / 100;
+  rat2 = rad2 * rt2 / 100;
 }
