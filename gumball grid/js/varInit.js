@@ -2,15 +2,26 @@ window.wallpaperPropertyListener = {
   applyUserProperties: function(properties) {
     if (properties.bgMode) {
       bgMode = properties.bgMode.value;
+      dots = [];
+      setup();
     }
     if (properties.Image) {
-      bgImage = properties.Image.value;
+      if ( properties.Image.value ){
+        bgImage = 'file:///' + properties.Image.value;
+      } else {
+        bgImage = "bg.jpg";
+      }
+      dots = [];
+      setup();
     }
     if (properties.bgColor) {
       let bgColor = properties.bgColor.value.split(' ');
       bgColor_r = Math.ceil(bgColor[0] * 255);
       bgColor_g = Math.ceil(bgColor[1] * 255);
       bgColor_b = Math.ceil(bgColor[2] * 255);
+    }
+    if (properties.bgColorAlpha) {
+      bgColorAlpha = Math.ceil(properties.bgColorAlpha.value * 255/100);
     }
 
     if (properties.spacing) {
@@ -182,6 +193,9 @@ window.wallpaperPropertyListener = {
       poly = properties.poly.value;
       calcMaxDist();
     }
+    if (properties.mouseTurn) {
+      mouseTurn = properties.mouseTurn.value;
+    }
 
     if (properties.corn1) {
       corn1 = properties.corn1.value;
@@ -245,9 +259,11 @@ let fps = false;
 let movingDot;
 let blend = 1;
 let circleTimer;
+let img; // loadImage variable
 let bgImage = 'bg.jpg';
 let bgMode = true;
 let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
+let bgColorAlpha = 0;
 
 // customizable variables
 
@@ -297,7 +313,7 @@ let ap = 5;
 // Corners ( 1 - inf )
 let corn1 = 3;
 let corn2 = 8;
-let cornd = 0;
+let cornd = 4;
 let cornp = 2;
 
 // rotation ( 0 - inf )
@@ -317,8 +333,9 @@ let ratp = 1;
 
 let n = 40;
 let hex = true;
-let circleMask = 900.0;
+let circleMask = 400.0;
 let poly = true;
+let mouseTurn = true;
 let sinedot = true;
 let sinedotShow = true;
 let circleShow = false;

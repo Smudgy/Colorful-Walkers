@@ -30,23 +30,31 @@
 				"order" : 0.9,
 				"text" : "Background mode",
 				"type" : "combo",
-				"value" : 1
+				"value" : true
 			},
 			"Image" :
       {
 				"condition" : "bgMode.value == true",
         "text" : "Background image",
         "type" : "file",
-				"order" : 0.91,
-				"value" : "bg.jpg"
+				"order" : 0.91
       },
 			"bgColor" :
 			{
-				"condition" : "bgMode.value == false",
-				"order" : 0.91,
+				"order" : 0.911,
 				"text" : "Background color",
 				"type" : "color",
 				"value" : "0.03 0.03 0.03"
+			},
+			"bgColorAlpha" :
+			{
+				"condition" : "bgMode.value == true",
+				"max" : 100,
+				"min" : 0,
+				"order" : 0.912,
+				"text" : "Color alpha",
+				"type" : "slider",
+				"value" : 0
 			},
 			"spacing" :
 			{
@@ -83,6 +91,13 @@
 			{
 				"order" : 19,
 				"text" : "polygon shapes",
+				"type" : "bool",
+				"value" : true
+			},
+			"mouseTurn" :
+			{
+				"order" : 35.01,
+				"text" : "<br>Turn shapes' anchor towards mouse/sine",
 				"type" : "bool",
 				"value" : true
 			},

@@ -101,10 +101,12 @@
 
       translate(this.v1.x - shiftMouse * ( v2.x ) - shiftSine * ( v3.x ), this.v1.y - shiftMouse * ( v2.y ) - shiftSine * ( v3.y ));
       rotate( rotation );
-      fill( hue, sat, lum, alpha );
-
-      if ( poly ) {
+      if ( mouseTurn ){
         rotate( 315 + v2.heading() );
+      }
+
+      fill( hue, sat, lum, alpha );
+      if ( poly ) {
         polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
@@ -142,10 +144,13 @@
 
       translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
       rotate( rotation );
+      if ( mouseTurn ){
+        rotate( 315 + v2.heading() );
+      }
+
       fill( hue, sat, lum, alpha );
 
       if ( poly ) {
-        rotate( 315 );
         polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
@@ -183,10 +188,11 @@
 
       translate(this.v1.x - shift * ( v2.x ), this.v1.y - shift * ( v2.y ));
       rotate( rotation );
-      fill( hue, sat, lum, alpha );
+      if ( mouseTurn ){
+        rotate( 315 + v2.heading() );
+      }
 
       if ( poly ) {
-        rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
@@ -220,7 +226,6 @@
       fill( hue, sat, lum, alpha );
 
       if ( poly ) {
-        rotate( 315 + v2.heading() );
         polygon(0, 0, radius * 0.7, corners);
       } else {
         rect(0, 0, Math.max(radius + Math.ceil(ratio), 0), Math.max(radius - Math.floor(ratio),0), roundoff);
@@ -236,6 +241,7 @@
     createCanvas(w, h);
     angleMode(DEGREES);
     rectMode(CENTER);
+    img = loadImage(bgImage);
 
     let shfBound = -Math.min(sh1, sh2);
     let xAlt = 0;
@@ -266,12 +272,15 @@
   }
 
   function draw() {
+    // Background
     push();
     colorMode(RGB);
-    background( bgColor_r, bgColor_g, bgColor_b );
-    if ( bgMode ) {
-      let bg = loadImage(bgImage);
-      background(bg);
+    if ( bgMode && typeof(img) === "object" && img) {
+      background( img );
+      background( bgColor_r, bgColor_g, bgColor_b, bgColorAlpha );
+      // ^ color on top of bg (with alpha)
+    } else {
+      background( bgColor_r, bgColor_g, bgColor_b);
     }
     pop();
 
