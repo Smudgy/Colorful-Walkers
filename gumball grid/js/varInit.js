@@ -2,6 +2,7 @@ window.wallpaperPropertyListener = {
   applyUserProperties: function(properties) {
     if (properties.bgMode) {
       bgMode = properties.bgMode.value;
+      preload();
       dots = [];
       setup();
     }
@@ -11,9 +12,13 @@ window.wallpaperPropertyListener = {
       } else {
         bgImage = "bg.jpg";
       }
-      dots = [];
-      setup();
+      reload();
     }
+    if (properties.ImageGray) {
+      ImageGray = properties.ImageGray.value;
+      reload();
+    }
+
     if (properties.bgColor) {
       let bgColor = properties.bgColor.value.split(' ');
       bgColor_r = Math.ceil(bgColor[0] * 255);
@@ -259,9 +264,13 @@ let fps = false;
 let movingDot;
 let blend = 1;
 let circleTimer;
+
 let img; // loadImage variable
 let bgImage = 'bg.jpg';
+let bgG; // createGraphics
 let bgMode = true;
+let ImageGray = false;
+let busy = false;
 let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
 let bgColorAlpha = 0;
 

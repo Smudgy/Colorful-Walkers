@@ -236,12 +236,29 @@
   };
 
   // p5 setup() and draw()
+  function preload() {
+    img = loadImage( bgImage );
+  }
+
+  function reload() {
+    busy = true;
+
+    img = loadImage( bgImage, () => {
+      if ( bgMode ) {
+        bgG = createGraphics(w, h);
+        bgG.background( img );
+        if( ImageGray ) {
+          bgG.filter(GRAY);
+        }
+      }
+      busy = false;
+    });
+  }
 
   function setup() {
     createCanvas(w, h);
     angleMode(DEGREES);
     rectMode(CENTER);
-    img = loadImage(bgImage);
 
     let shfBound = -Math.min(sh1, sh2);
     let xAlt = 0;
@@ -275,8 +292,10 @@
     // Background
     push();
     colorMode(RGB);
-    if ( bgMode && typeof(img) === "object" && img) {
-      background( img );
+    if ( bgMode && !busy ) {
+      if ( bgG ) {
+        image(bgG, 0, 0);
+      }
       background( bgColor_r, bgColor_g, bgColor_b, bgColorAlpha );
       // ^ color on top of bg (with alpha)
     } else {

@@ -35,9 +35,17 @@
 			"Image" :
       {
 				"condition" : "bgMode.value == true",
-        "text" : "Background image",
+        "text" : "BG image",
         "type" : "file",
 				"order" : 0.91
+      },
+			"ImageGray" :
+      {
+				"condition" : "bgMode.value == true",
+        "text" : "BG gray scale",
+        "type" : "bool",
+				"order" : 0.9101,
+				"value" : false
       },
 			"bgColor" :
 			{
