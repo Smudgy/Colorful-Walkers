@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <style>
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  </style>
+
+</head>
+
+<body style="background-color: black;">
+  <script src="js/p5.js"></script>
+  <script>
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    let stars = [];
+    let n = 100;
+
+    // Sinedot class
+    class star {
+      constructor(x, y) {
+        // positional
+        this.pos = createVector(x, y);
+        this.vel = createVector(x - w / 2, y - h / 2).normalize().mult(4);
+
+        // score; [1, 1.2]
+        this.score = 1 + dist(w / 2, h / 2, x, y) / dist(w / 2, h / 2, 0, 0) * 0.2;
+        this.count = 0;
+
+        // visual
+        this.alpha = 0;
+        this.r = this.score * 2;
+      }
+
+      shoot() {
+        this.pos.add(this.vel);
+        this.vel.mult(this.score).rotate(random(-2, 2));
+
+        //this.score = pow(this.score, 1.1);
+        this.count++;
+
+        this.alpha += this.score * 5;
+      }
+
+      show() {
+        fill(255, 255, 255, this.alpha);
+        noStroke();
+        ellipse(this.pos.x, this.pos.y, this.r, this.r);
+      }
+    }
+
+    // p5 setup() and draw()
+    function setup() {
+      createCanvas(w, h);
+      angleMode(DEGREES);
+      rectMode(CENTER);
+
+      addStars();
+    }
+
+    function draw() {
+      // Background
+      push();
+      colorMode(RGB);
+      background(0);
+      pop();
+
+      for (let i = 0; i < stars.length; i++) {
+        stars[i].shoot();
+        stars[i].show();
+        if (stars[i].pos.x < 0 ||
+          stars[i].pos.x > w ||
+          stars[i].pos.y < 0 ||
+          stars[i].pos.y > h) {
+          stars.splice(i, 1);
+        }
+      }
+
+      addStars();
+    }
+
+    // resize function
+    window.addEventListener('resize', function () {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      stars = [];
+      setup();
+    })
+
+    function addStars() {
+      while (stars.length < n) {
+        let x, y;
+        if (random() > 0.3) {
+          x = int(random(0, w));
+          y = int(random(0, h));
+        } else {
+          x = randn_bm() * w;
+          y = randn_bm() * h;
+        }
+        stars.push(new star(x, y));
+      }
+    }
+
+    // gaussian curve approximation
+    function randn_bm() {
+      let u = 0;
+      let v = 0;
+      while (u === 0) u = random(); //Converting [0,1) to (0,1)
+      while (v === 0) v = random();
+      let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+      num = num / 10.0 + 0.5; // Translate to 0 -> 1
+      if (num > 1 || num < 0) return randn_bm(); // resample between 0 and 1
+      return num;
+    }
+  </script>
+</body>
+
+</html>
