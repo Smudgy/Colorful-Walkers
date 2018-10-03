@@ -28,25 +28,25 @@
       constructor(x, y) {
         // positional
         this.pos = createVector(x, y);
-        this.vel = createVector(x - w / 2, y - h / 2).normalize().mult(4);
+        this.vel = createVector(x - w / 2, y - h / 4).normalize().mult(4).rotate(random(-10, 10));
 
         // score; [1, 1.2]
-        this.score = 1 + dist(w / 2, h / 2, x, y) / dist(w / 2, h / 2, 0, 0) * 0.2;
+        this.score = pow(random(1, 1.1), 0.5);
         this.count = 0;
 
         // visual
         this.alpha = 0;
-        this.r = this.score * 2;
+        this.r = 3;
       }
 
       shoot() {
         this.pos.add(this.vel);
-        this.vel.mult(this.score).rotate(random(-2, 2));
+        this.vel.mult(this.score).rotate(random(-1, 1));
 
-        //this.score = pow(this.score, 1.1);
+        this.score = pow(this.score, 1.5);
         this.count++;
 
-        this.alpha += this.score * 5;
+        this.alpha += 10;
       }
 
       show() {
@@ -78,7 +78,8 @@
         if (stars[i].pos.x < 0 ||
           stars[i].pos.x > w ||
           stars[i].pos.y < 0 ||
-          stars[i].pos.y > h) {
+          stars[i].pos.y > h ||
+          stars[i].pos.y == h / 2 && stars[i].pos.x == w / 2) {
           stars.splice(i, 1);
         }
       }
@@ -97,7 +98,7 @@
     function addStars() {
       while (stars.length < n) {
         let x, y;
-        if (random() > 0.3) {
+        if (random() > 0.1) {
           x = int(random(0, w));
           y = int(random(0, h));
         } else {
