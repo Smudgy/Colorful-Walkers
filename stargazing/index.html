@@ -6,11 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <style>
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
     </style>
 
 </head>
@@ -18,123 +19,167 @@
 <body style="background-color: black;">
     <script src="js/p5.js"></script>
     <script>
-        let w = window.innerWidth;
-        let h = window.innerHeight;
-        let stars = [];
-        let n = 1000;
-        let origin;
-        let mouseVec;
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    let stars = [];
+    let n = 1000;
+    let turbo = 0;
+    let origin;
+    let spawnpoint;
+    let mouseVec;
 
-        // Sinedot class
-        class star {
-            constructor(x, y) {
-                // positional
-                let a = randn_bm()
-                a < 0.5 ? this.z = 0.5 - a : this.z = (1 - (a - 0.5));
-                this.pos = createVector(x, y);
-                this.vel = createVector(x, y).sub(origin).normalize()
-                    .mult(5 * this.z).rotate(random(-15, 15));
-                // speed lower bound
-                let speedLB = 0.1;
-                if (this.vel.mag() < speedLB) {
-                    this.vel.mult(speedLB / this.vel.mag())
-                }
+    // Sinedot class
+    class star {
+        constructor(x, y) {
+            // positional
+            this.z = random();
+            this.pos = createVector(x, y);
+            this.velD = createVector(1, 1).normalize()
+                .mult(this.z).rotate(random(-2, 2));
+            this.score = 1;
 
-                // score; [1, 1.1]
-                this.score = pow(random(1, 1.1), 0.5);
-                this.count = 0;
+            // visuals
+            this.alphaUB = map(this.z, 0, 1, 100, 180) + random(-65, 65);
+            this.alpha = 0;
+            this.r = random(1, 2);
+        }
 
-                // visuals
-                this.alphaUB = map(this.z, 0, 1, 100, 200) + random(-50, 50);
-                this.alpha = 0;
-                this.r = 1;
-            }
+        // star methods
 
-            shoot() {
-                this.vel.mult(1.0005);
-                this.pos.add(this.vel);
-                this.count++;
-            }
+        shoot() {
 
-            show() {
-                fill(255, 255, 255, this.alpha);
-                let rnd = random(30, 60);
-                if (this.alpha + this.alphaUB / rnd < this.alphaUB) {
-                    this.alpha += this.alphaUB / rnd;
-                } else {
-                    this.alpha = this.alphaUB;
-                }
-                noStroke();
-                ellipse(this.pos.x, this.pos.y, this.r, this.r);
+            this.pos.add(this.velD);
+
+            if (turbo > 0) {
+                this.score += 0.1;
+                this.velC = createVector(this.pos.x, this.pos.y).sub(origin).normalize().add(mouseVec);
+                let turboVec = this.velC.copy();
+                turboVec.mult(5 * turbo).mult(this.score);
+                this.pos.add(turboVec);
+
+                let altAlpa = 30 - 25 * turbo;
+                (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
+                this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
+            } else {
+                this.score = 1;
             }
         }
 
-        // p5 setup() and draw()
-        function setup() {
-            createCanvas(w, h);
-            angleMode(DEGREES);
-            rectMode(CENTER);
-            frameRate(60);
-
-            origin = createVector(w / 2, h / 8);
-            addStars();
+        show() {
+            fill(255, 255, 255, this.alpha);
+            let rnd = random(30, 60);
+            (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
+            this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
+            noStroke();
+            ellipse(this.pos.x, this.pos.y, this.r, this.r);
         }
+    }
 
-        function draw() {
-            // Background
-            push();
-            colorMode(RGB);
+    // p5 setup() and draw()
+    function setup() {
+        createCanvas(w, h);
+        angleMode(DEGREES);
+        rectMode(CENTER);
+        colorMode(RGB);
+        frameRate(60);
+
+        spawnpoint = createVector(w / 2, h / 8);
+
+    }
+
+    function draw() {
+        origin = createVector(w, h).sub(mouseX, mouseY);
+        mouseVec = createVector(mouseX, mouseY).sub(origin).normalize().mult(0.4);
+        mouseIsPressed ? hyper(true) : hyper(false);
+
+        if (turbo > 0) {
+            background(0, 255 - 100 * turbo);
+        } else {
             background(0);
-            pop();
+        }
 
-            for (let i = 0; i < stars.length; i++) {
-                stars[i].shoot();
-                stars[i].show();
+        for (let i = 0; i < stars.length; i++) {
+            stars[i].shoot();
+            stars[i].show();
+            if (turbo > 0) {
                 if (stars[i].pos.x < 0 ||
                     stars[i].pos.x > w ||
                     stars[i].pos.y < 0 ||
                     stars[i].pos.y > h ||
-                    stars[i].pos.y == h / 2 && stars[i].pos.x == w / 2) {
+                    (stars[i].pos.y == h / 2 && stars[i].pos.x == w / 2)) {
                     stars.splice(i, 1);
                 }
             }
-
-            addStars();
-        }
-
-        // resize function
-        window.addEventListener('resize', function () {
-            w = canvas.width = window.innerWidth;
-            h = canvas.height = window.innerHeight;
-            stars = [];
-            setup();
-        })
-
-        function addStars() {
-            while (stars.length < n) {
-                let x, y;
-                if (random() > 0.3) {
-                    x = int(random(0, w));
-                    y = int(random(0, h));
-                } else {
-                    x = randn_bm() * origin.x * 2;
-                    y = randn_bm() * origin.y * 2;
+            else {
+                if (stars[i].pos.x > w) {
+                    stars[i].pos.x = 0;
                 }
-                stars.push(new star(x, y));
+                if (stars[i].pos.x < 0) {
+                    stars[i].pos.x = w;
+                }
+                if (stars[i].pos.y > h) {
+                    stars[i].pos.y = 0;
+                }
+                if (stars[i].pos.y < 0) {
+                    stars[i].pos.y = h;
+                }
             }
         }
+        addStars();
+    }
 
-        // gaussian curve approximation
-        function randn_bm() {
-            let u = 0;
-            let v = 0;
-            while (u === 0) u = random(); //Converting [0,1) to (0,1)
-            while (v === 0) v = random();
-            let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-            num = num / 10.0 + 0.5; // Translate to 0 -> 1
-            if (num > 1 || num < 0) return randn_bm(); // resample between 0 and 1
-            return num;
+    function addStars() {
+        while (stars.length < n) {
+            let x, y;
+            if (random() > turbo) {
+                x = int(random(0, w));
+                y = int(random(0, h));
+            } else {
+                let vec = origin.copy();
+                while (vec.dist(origin) < 50) {
+                    x = randn_bm() * origin.x * 2;
+                    y = randn_bm() * origin.y * 2;
+                    vec = createVector(x, y);
+                }
+            }
+            stars.push(new star(x, y));
         }
+    }
+
+    function hyper(bool) {
+        if (bool) {
+            if (turbo < 1) {
+                turbo += 0.01;
+            }
+        } else {
+            if (turbo > 0.01) {
+                turbo = turbo / 1.1;
+            } else {
+                turbo = 0;
+            }
+        }
+    }
+
+    // gaussian curve approximation
+    function randn_bm() {
+        let u = 0;
+        let v = 0;
+        while (u === 0) u = random(); //Converting [0,1) to (0,1)
+        while (v === 0) v = random();
+        let num = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+        num = num / 10.0 + 0.5; // Translate to 0 -> 1
+        if (num > 1 || num < 0) return randn_bm(); // resample between 0 and 1
+        return num;
+    }
+
+    // resize function
+    window.addEventListener('resize', function () {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+        stars = [];
+        setup();
+    })
+
     </script>
 </body>
 
