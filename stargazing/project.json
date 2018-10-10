@@ -1,0 +1,10 @@
+{
+    "file": "index.html",
+    "preview": "prev.png",
+    "general":
+    {
+        "supportsaudioprocessing": true
+    },
+    "title": "Stargazing",
+    "type": "web"
+}
