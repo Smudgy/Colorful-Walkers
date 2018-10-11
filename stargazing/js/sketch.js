@@ -27,36 +27,28 @@ function wallpaperAudioListener(audioArray) {
     let array1 = audioArray.slice(0, 64);
     let array2 = audioArray.slice(64, 128);
     let workArray = array1.map((a, i) => (a + array2[i]) / 2);
-
-    // clamp higher values to 1
-    let top = 0;
+    // workArray = [ normalizeBands = [ bassBands, ... ], ... ]
+    // normalize over the first {normalizeBands} bands
+    // retreive bass from first {bassBands} bands
+    const normalizeBands = 32;
+    const bassBands = 2;
+    let top = 0.1;
+    for (let i = 0; i < normalizeBands; i++) {
+        if (workArray[i] > top) {
+            top = workArray[i];
+        };
+    }
+    // clamp values to 1
     for (let i = 0; i < workArray.length; i++) {
         if (workArray[i] > 1) {
             workArray[i] = 1;
         };
-        if (top != 1 && workArray[i] > top) {
-            top = workArray[i];
-        };
     }
-
-    // retreive bass from the workArray
-    const nrofBands = 5;
-    bass = workArray.slice(0, nrofBands).reduce((a, b) => a + b, 0) / (nrofBands * top);
-
-    //more frequencies means less bass interaction / more stops on tremble (32-48)
-    // const normalize = audioArray.slice(0, 32).concat(audioArray.slice(64, 64 + 32));
-    // const threshold = audioArray.slice(0, 16).concat(audioArray.slice(64, 64 + 16));
-
-    // if (Math.max.apply(Math, threshold) > 0.02) {
-    //     let ratio = Math.max.apply(Math, normalize);
-    //     for (freqBand of audioArray) {
-    //         freqBand = freqBand / ratio;
-    //     }
-    // }
-
-    // let lowFreqs = audioArray.slice(0, 5).concat(audioArray.slice(64, 64 + 5));
-    // let sum = lowFreqs.reduce((a, b) => a + b, 0);
-    // let bass = sum / lowFreqs.length;
+    // assign bass
+    bass = workArray.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top);
+    // curve bass values
+    let bassMod = (x) => x < 0.5 ? pow(x, 2) : pow(x, 0.5);
+    bass = bassMod(bass);
 
     // array to avoid stuttering/flickering
     // let arr = [];
@@ -84,52 +76,57 @@ class star {
     constructor(x, y) {
         // positional attributes
         this.z = random();
+        this.angleMod = random(-2, 2);
         this.pos = createVector(x, y);
-        this.velD = createVector(1, 1).normalize()
-            .mult(this.z).rotate(random(-4, 4));
+        this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
+
         this.turbo = 0;
 
         // visual attributes
         this.alphaUB = map(this.z, 0, 1, 100, 180) + random(-65, 65);
         this.alpha = 0;
-        this.r = 2; //random(1, 2);
+        this.rBase = random(1, 2);
+        this.r = this.rBase;
     }
 
     // star methods
     shoot() {
-        this.pos.add(this.velD);
+        const v1 = mouseVec.copy().mult(this.z).rotate(this.angleMod);
+        const diff = v1.copy().sub(this.vel);
+        this.vel = this.vel.add(diff.mult(0.05));
+
+        this.pos.add(this.vel);
 
         if (this.turbo > 0) {
             // positional attributes
-            //this.velC = createVector(this.pos.x, this.pos.y).sub(origin).normalize();
-            let turboVec = this.velD.copy();
-            turboVec.mult(10 * this.turbo);
+            let turboVec = this.vel.copy();
+            turboVec.mult(8 * this.turbo);
             this.pos.add(turboVec);
 
             // visual attributes
-            let altAlpa = abs(30 - 25 * this.turbo);
-            (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
-            this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
-            this.r = 2 + this.turbo;
+            // let altAlpa = abs(30 - 25 * this.turbo);
+            // (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
+            // this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
+            this.r = this.rBase + this.turbo;
         }
     }
 
     show() {
-        fill(255, 255, 255, this.alpha);
+        fill(this.alpha, this.alpha, this.alpha);
         let rnd = random(30, 60);
         (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
         this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
         noStroke();
+
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
     }
 
     turboMod() {
-        let falloff = 1.1;
-        if (this.turbo <= bass || this.turbo / falloff < bass) {
-            //this.turbo += 1;
+        const falloff = (x) => (x - 0.01) / 1.05;
+        if (this.turbo <= bass || falloff(this.turbo) < bass) {
             this.turbo = bass;
         } else {
-            this.turbo /= falloff;
+            this.turbo = falloff(this.turbo);
         }
     }
 }
@@ -142,18 +139,12 @@ function setup() {
     colorMode(RGB);
     frameRate(60);
 
-    // let aArr = [];
-    // for (let i = 0; i < 128; i++) {
-    //     aArr[i] = random(0, 2);
-    // }
-    // wallpaperAudioListener(aArr);
-
-    spawnpoint = createVector(w / 2, h / 8);
+    origin = createVector(w / 2, 0);
+    //tryWallpaperApi();
 }
 
 function draw() {
-    origin = createVector(w, h).sub(mouseX, mouseY);
-    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize().mult(0.4);
+    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize();
 
     // background coloring on turbo values
     let maxTurbo = 0;
@@ -163,7 +154,7 @@ function draw() {
         star.turbo > maxTurbo ? maxTurbo = star.turbo : () => {};
     }
     if (maxTurbo > 0) {
-        background(0, 255 - 150 * maxTurbo);
+        background(0, 255 - 80 * maxTurbo);
     } else {
         background(0);
     }
@@ -208,6 +199,19 @@ function randn_bm() {
     return num;
 }
 
+function mousePressed() {
+    for (star of stars) {
+        star.turbo = 1;
+    }
+}
+
+function tryWallpaperApi() {
+    let aArr = [];
+    for (let i = 0; i < 128; i++) {
+        aArr[i] = random(0, 2);
+    }
+    wallpaperAudioListener(aArr);
+}
 // resize function
 window.addEventListener('resize', function () {
     w = canvas.width = window.innerWidth;
