@@ -1,11 +1,15 @@
 let w = window.innerWidth;
 let h = window.innerHeight;
 let stars = [];
-let n = 500;
+let n = 250;
+let nVar = 50;
+let variation = 0;
 
 let origin;
 let spawnpoint;
 let mouseVec;
+let mouseTracking = true;
+let mouseVecAngle = 225;
 
 // global bass value, computated by wallpaperAudioListener()
 let bass = 0;
@@ -17,12 +21,21 @@ let bQSize = 1;
 let bQueue = [];
 
 window.wallpaperPropertyListener = {
-    applyUserProperties: function (properties) {
-        if (properties.showBass) {
-            bassRef = properties.showBass.value;
+    applyUserProperties: function (p) {
+        // amount of stars
+        if (p.amount) {
+            n = p.amount.value;
         }
-        if (properties.amount) {
-            n = properties.amount.value;
+        // show bass reference
+        if (p.showBass) {
+            bassRef = p.showBass.value;
+        }
+        // mousetracking
+        if (p.mouseTracking) {
+            mouseTracking = p.mouseTracking.value;
+        }
+        if (p.mouseVecAngle) {
+            mouseVecAngle = p.mouseVecAngle.value;
         }
     }
 }
@@ -63,25 +76,25 @@ function wallpaperAudioListener(audioArray) {
         };
     }
     // smooth bass over previous values
-    let cBass = workArray.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top);
-    if (bQueue.length >= bQSize) {
-        bQueue.pop();
-    }
-    bQueue.push(cBass);
-    let cumulativeBass = 0,
-        div = 0;
-    for (let i = 0; i < bQueue.length; i++) {
-        cumulativeBass += (i + 1) * bQueue[i];
-        div += (i + 1);
-    }
-    bass = cumulativeBass / div;
+    bass = workArray.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top);
+    // if (bQueue.length >= bQSize) {
+    //     bQueue.pop();
+    // }
+    // bQueue.push(bass);
+    // let cumulativeBass = 0,
+    //     div = 0;
+    // for (let i = 0; i < bQueue.length; i++) {
+    //     cumulativeBass += (i + 1) * bQueue[i];
+    //     div += (i + 1);
+    // }
+    // bass = cumulativeBass / div;
     // curve bass values
-    let bassMod = (x) => {
-        x < 0.1 ? x = 0 : x = x;
-        x < 0.5 ? x = pow(x * 2, 2) / 2 : x = pow(x, 0.5);
-        return x;
-    }
-    bass = bassMod(bass);
+    // let bassMod = (x) => {
+    //     x < 0.1 ? x = 0 : x = x;
+    //     x < 0.5 ? x = pow(x * 2, 2) / 2 : x = pow(x, 0.5);
+    //     return x;
+    // }
+    // bass = bassMod(bass);
 
     // if (arr[0] && arr[1]) {
     //     arr[1] = arr[0];
@@ -107,9 +120,10 @@ class star {
         this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
 
         this.turbo = 0;
+        this.done = false;
 
         // visual attributes
-        this.alphaUB = map(this.z, 0, 1, 125, 255) + random(-50, 50);
+        this.alphaUB = map(this.z, 0, 1, 125, 200) + random(-50, 50);
         this.alpha = 0;
         this.rBase = 2;
         this.r = this.rBase;
@@ -118,9 +132,8 @@ class star {
     // star methods
     shoot() {
         // calculate angle change
-        const v1 = mouseVec.copy().mult(this.z).rotate(this.angleMod);
-        const diff = v1.copy().sub(this.vel);
-        this.vel = this.vel.add(diff.mult(0.02)).normalize().mult(this.z);
+        const diff = mouseVec.copy().mult(this.z).rotate(this.angleMod).sub(this.vel).mult(0.02);
+        this.vel = this.vel.add(diff).normalize().mult(this.z);
 
         this.pos.add(this.vel);
 
@@ -142,6 +155,7 @@ class star {
 
     show() {
         fill(this.alpha, this.alpha, this.alpha);
+
         let rnd = random(30, 60);
         (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
         this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
@@ -161,28 +175,33 @@ class star {
 
 // ----------------------- p5 setup() and draw() -----------------------
 function setup() {
-    createCanvas(w, h);
     angleMode(DEGREES);
     colorMode(RGB);
-    frameRate(60);
+    frameRate(30);
+    createCanvas(w, h);
     noStroke();
 
     //origin = createVector(w / 2, 0);
-    origin = createVector(w / 2, -h / 6);
-    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize();
+    origin = createVector(w / 2, -w / 6);
+    mouseVec = createVector(w, h).sub(origin).normalize();
 
     //tryWallpaperApi();
 }
 
 function draw() {
-    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize();
+    mouseTracking ?
+        mouseVec = createVector(mouseX, mouseY).sub(origin).normalize() :
+        mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
+
     // background coloring on turbo values
     let maxTurbo = 0;
-    for (let star of stars) {
-        star.turboMod();
-        //(mouseIsPressed || bass > 0) ? star.hyper(true): star.hyper(false);
-        star.turbo > maxTurbo ? maxTurbo = star.turbo : () => {};
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].turboMod();
+        if (stars[i].turbo > maxTurbo) {
+            maxTurbo = stars[i].turbo;
+        };
     }
+
     if (maxTurbo > 0) {
         background(0, 255 - 255 * maxTurbo);
     } else {
@@ -195,18 +214,21 @@ function draw() {
         star.show();
         if (star.pos.x > w) {
             star.pos.x = 0;
+            star.pos.y = random(0, h);
         } else if (star.pos.x < 0) {
             star.pos.x = w;
+            star.pos.y = random(0, h);
         }
 
         if (star.pos.y > h) {
+            star.pos.x = random(0, w);
             star.pos.y = 0;
-            star.pos.x = random(0, w);
         } else if (star.pos.y < 0) {
-            star.pos.y = h;
             star.pos.x = random(0, w);
+            star.pos.y = h;
         }
     }
+
     setStars();
 
     // draw rectangle for bass reference
@@ -220,12 +242,17 @@ function draw() {
 
 // ----------------------- other methods -----------------------
 function setStars() {
-    while (stars.length < n) {
-        let x = int(random(0, w));
-        let y = int(random(0, h));
-        stars = [...stars, new star(x, y)] //.push(new star(x, y));
+    let i = 0;
+    while (i < 10) {
+        if (stars.length < n) {
+            let x = int(random(0, w));
+            let y = int(random(0, h));
+            stars = [...stars, new star(x, y)] //.push(new star(x, y));
+        }
+        i++;
     }
     while (stars.length > n) {
+        let i = round(random(0, stars.length - 1));
         stars.pop();
     }
 }
@@ -242,16 +269,9 @@ function randn_bm() {
     return num;
 }
 
-// check if array is full or not
-function isArrayFull(arr) {
-    return arr.length === arr.filter(function (o) {
-        return typeof o !== 'undefined' || o !== null;
-    }).length;
-}
-
 function mousePressed() {
-    for (star of stars) {
-        star.turbo = 1;
+    for (let i = 0; i < stars.length; i++) {
+        stars[i].turbo = 1;
     }
 }
 

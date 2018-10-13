@@ -16,20 +16,42 @@
         {
             "amount":
             {
-                "order": 0.50,
+                "order": 1.00,
                 "editable": true,
-                "max": 800,
+
                 "min": 1,
+                "max": 800,
                 "text": "Amount of stars",
                 "type": "slider",
                 "value": 300
             },
             "showBass":
             {
-                "order": 1.00,
-                "text": "show the bass value meter",
+                "order": 1.1,
+
+                "text": "Show the bass value meter?",
                 "type": "bool",
                 "value": false
+            },
+            "mouseTracking":
+            {
+                "order": 1.21,
+
+                "text": "Let the stars follow the mouse?",
+                "type": "bool",
+                "value": true
+            },
+            "mouseVecAngle":
+            {
+                "order": 1.22,
+                "editable": true,
+                "condition": "!mouseTracking.value",
+
+                "min": 0,
+                "max": 360,
+                "text": "Set the direction of the stars",
+                "type": "slider",
+                "value": 225
             }
         }
     }
