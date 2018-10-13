@@ -21,6 +21,9 @@ window.wallpaperPropertyListener = {
         if (properties.showBass) {
             bassRef = properties.showBass.value;
         }
+        if (properties.amount) {
+            n = properties.amount.value;
+        }
     }
 }
 
@@ -45,8 +48,8 @@ function wallpaperAudioListener(audioArray) {
     // workArray = [ normalizeBands = [ bassBands, ... ], ... ]
     // normalize over the first {normalizeBands} bands
     // retreive bass from first {bassBands} bands
-    const normalizeBands = 32;
-    const bassBands = 4;
+    let normalizeBands = 32;
+    let bassBands = 4;
     let top = 0.01;
     for (let i = 0; i < normalizeBands; i++) {
         if (workArray[i] > top) {
@@ -108,29 +111,32 @@ class star {
         // visual attributes
         this.alphaUB = map(this.z, 0, 1, 125, 255) + random(-50, 50);
         this.alpha = 0;
-        this.rBase = random(1, 2);
+        this.rBase = 2;
         this.r = this.rBase;
     }
 
     // star methods
     shoot() {
+        // calculate angle change
         const v1 = mouseVec.copy().mult(this.z).rotate(this.angleMod);
         const diff = v1.copy().sub(this.vel);
-        this.vel = this.vel.add(diff.mult(0.02));
+        this.vel = this.vel.add(diff.mult(0.02)).normalize().mult(this.z);
 
         this.pos.add(this.vel);
 
+        // if there is turbo
         if (this.turbo > 0) {
             // positional attributes
             let turboVec = this.vel.copy();
-            turboVec.mult(8 * this.turbo);
+            let turboSpeed = 10; // def: 8
+            turboVec.mult(turboSpeed * this.turbo);
             this.pos.add(turboVec);
 
             // visual attributes
             // let altAlpa = abs(30 - 25 * this.turbo);
             // (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
             // this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
-            this.r = this.rBase + this.turbo;
+            // this.r = this.rBase + this.turbo;
         }
     }
 
@@ -201,7 +207,7 @@ function draw() {
             star.pos.x = random(0, w);
         }
     }
-    addStars();
+    setStars();
 
     // draw rectangle for bass reference
     if (bassRef) {
@@ -213,11 +219,14 @@ function draw() {
 }
 
 // ----------------------- other methods -----------------------
-function addStars() {
+function setStars() {
     while (stars.length < n) {
         let x = int(random(0, w));
         let y = int(random(0, h));
         stars = [...stars, new star(x, y)] //.push(new star(x, y));
+    }
+    while (stars.length > n) {
+        stars.pop();
     }
 }
 

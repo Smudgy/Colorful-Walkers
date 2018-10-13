@@ -14,6 +14,16 @@
         "supportsaudioprocessing": true,
         "properties":
         {
+            "amount":
+            {
+                "order": 0.50,
+                "editable": true,
+                "max": 800,
+                "min": 1,
+                "text": "Amount of stars",
+                "type": "slider",
+                "value": 300
+            },
             "showBass":
             {
                 "order": 1.00,
