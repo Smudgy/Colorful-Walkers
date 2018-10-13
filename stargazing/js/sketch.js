@@ -7,7 +7,22 @@ let origin;
 let spawnpoint;
 let mouseVec;
 
+// global bass value, computated by wallpaperAudioListener()
 let bass = 0;
+// show top right bass indicator
+let bassRef = true;
+// bass queue to negate stuttering/flickering
+// bQSize = n, smooth out the bass value using the last n values
+let bQSize = 1;
+let bQueue = [];
+
+window.wallpaperPropertyListener = {
+    applyUserProperties: function (properties) {
+        if (properties.showBass) {
+            bassRef = properties.showBass.value;
+        }
+    }
+}
 
 // ----------------------- WallpaperAudioListener -----------------------
 // predefined wallpaper engine function
@@ -31,8 +46,8 @@ function wallpaperAudioListener(audioArray) {
     // normalize over the first {normalizeBands} bands
     // retreive bass from first {bassBands} bands
     const normalizeBands = 32;
-    const bassBands = 2;
-    let top = 0.1;
+    const bassBands = 4;
+    let top = 0.01;
     for (let i = 0; i < normalizeBands; i++) {
         if (workArray[i] > top) {
             top = workArray[i];
@@ -44,30 +59,38 @@ function wallpaperAudioListener(audioArray) {
             workArray[i] = 1;
         };
     }
-    // assign bass
-    bass = workArray.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top);
+    // smooth bass over previous values
+    let cBass = workArray.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top);
+    if (bQueue.length >= bQSize) {
+        bQueue.pop();
+    }
+    bQueue.push(cBass);
+    let cumulativeBass = 0,
+        div = 0;
+    for (let i = 0; i < bQueue.length; i++) {
+        cumulativeBass += (i + 1) * bQueue[i];
+        div += (i + 1);
+    }
+    bass = cumulativeBass / div;
     // curve bass values
-    let bassMod = (x) => x < 0.5 ? pow(x, 2) : pow(x, 0.5);
+    let bassMod = (x) => {
+        x < 0.1 ? x = 0 : x = x;
+        x < 0.5 ? x = pow(x * 2, 2) / 2 : x = pow(x, 0.5);
+        return x;
+    }
     bass = bassMod(bass);
 
-    // array to avoid stuttering/flickering
-    // let arr = [];
     // if (arr[0] && arr[1]) {
     //     arr[1] = arr[0];
-    //     arr[0] = bassAvg;
+    //     arr[0] = bass;
     //     bass = arr[0] * 0.67 + arr[1] * 0.33;
     // } else if (arr[0]) {
     //     arr[1] = arr[0];
-    //     arr[0] = bassAvg;
+    //     arr[0] = bass;
     //     bass = arr[0];
     // } else {
-    //     arr[0] = bassAvg;
+    //     arr[0] = bass;
     //     bass = arr[0];
-    // }
-
-    // // noise reduction
-    // if (bass < 0.05) {
-    //     bass = 0;
     // }
 };
 
@@ -75,7 +98,7 @@ function wallpaperAudioListener(audioArray) {
 class star {
     constructor(x, y) {
         // positional attributes
-        this.z = random();
+        this.z = pow(random(), 2); // inverse square law
         this.angleMod = random(-2, 2);
         this.pos = createVector(x, y);
         this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
@@ -83,7 +106,7 @@ class star {
         this.turbo = 0;
 
         // visual attributes
-        this.alphaUB = map(this.z, 0, 1, 100, 180) + random(-65, 65);
+        this.alphaUB = map(this.z, 0, 1, 125, 255) + random(-50, 50);
         this.alpha = 0;
         this.rBase = random(1, 2);
         this.r = this.rBase;
@@ -93,7 +116,7 @@ class star {
     shoot() {
         const v1 = mouseVec.copy().mult(this.z).rotate(this.angleMod);
         const diff = v1.copy().sub(this.vel);
-        this.vel = this.vel.add(diff.mult(0.05));
+        this.vel = this.vel.add(diff.mult(0.02));
 
         this.pos.add(this.vel);
 
@@ -116,7 +139,6 @@ class star {
         let rnd = random(30, 60);
         (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
         this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
-        noStroke();
 
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
     }
@@ -135,17 +157,19 @@ class star {
 function setup() {
     createCanvas(w, h);
     angleMode(DEGREES);
-    rectMode(CENTER);
     colorMode(RGB);
     frameRate(60);
+    noStroke();
 
-    origin = createVector(w / 2, 0);
+    //origin = createVector(w / 2, 0);
+    origin = createVector(w / 2, -h / 6);
+    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize();
+
     //tryWallpaperApi();
 }
 
 function draw() {
     mouseVec = createVector(mouseX, mouseY).sub(origin).normalize();
-
     // background coloring on turbo values
     let maxTurbo = 0;
     for (let star of stars) {
@@ -154,7 +178,7 @@ function draw() {
         star.turbo > maxTurbo ? maxTurbo = star.turbo : () => {};
     }
     if (maxTurbo > 0) {
-        background(0, 255 - 80 * maxTurbo);
+        background(0, 255 - 255 * maxTurbo);
     } else {
         background(0);
     }
@@ -171,11 +195,21 @@ function draw() {
 
         if (star.pos.y > h) {
             star.pos.y = 0;
+            star.pos.x = random(0, w);
         } else if (star.pos.y < 0) {
             star.pos.y = h;
+            star.pos.x = random(0, w);
         }
     }
     addStars();
+
+    // draw rectangle for bass reference
+    if (bassRef) {
+        fill(50);
+        rect(w - 42, 10, 32, 200);
+        fill(255);
+        rect(w - 42, 10, 32, bass * 200);
+    }
 }
 
 // ----------------------- other methods -----------------------
@@ -199,6 +233,13 @@ function randn_bm() {
     return num;
 }
 
+// check if array is full or not
+function isArrayFull(arr) {
+    return arr.length === arr.filter(function (o) {
+        return typeof o !== 'undefined' || o !== null;
+    }).length;
+}
+
 function mousePressed() {
     for (star of stars) {
         star.turbo = 1;
@@ -211,6 +252,7 @@ function tryWallpaperApi() {
         aArr[i] = random(0, 2);
     }
     wallpaperAudioListener(aArr);
+    console.table(bQueue);
 }
 // resize function
 window.addEventListener('resize', function () {

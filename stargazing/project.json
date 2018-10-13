@@ -1,10 +1,26 @@
 {
     "file": "index.html",
+    "contentrating": "Everyone",
+    "title": "Stargazing",
+    "description": "A audio reactive star field.",
+
+    "type": "web",
     "preview": "prev.png",
+    "monetization": false,
+    "tags": ["Abstract"],
+    "visibility": "public",
     "general":
     {
-        "supportsaudioprocessing": true
-    },
-    "title": "Stargazing",
-    "type": "web"
+        "supportsaudioprocessing": true,
+        "properties":
+        {
+            "showBass":
+            {
+                "order": 1.00,
+                "text": "show the bass value meter",
+                "type": "bool",
+                "value": false
+            }
+        }
+    }
 }
