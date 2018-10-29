@@ -138,6 +138,7 @@ class star {
     this.z = pow(this.width, 3); // inverse square law
     this.angleMod = random(-2, 2);
     this.pos = createVector(x, y);
+    this.prevPos = this.pos.copy();
     this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
 
     // functional attributes
@@ -152,6 +153,8 @@ class star {
 
   // star methods
   shoot() {
+    this.updatePrevPos();
+
     // calculate angle change from the global variable mouseVec
     const diff = mouseVec.copy().mult(this.z).rotate(this.angleMod).sub(this.vel).mult(0.02);
     this.vel = this.vel.add(diff).normalize().mult(this.z);
@@ -170,20 +173,25 @@ class star {
       // let altAlpa = abs(30 - 25 * this.turbo);
       // (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
       // this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
-      this.r = this.rBase + this.turbo;
+      this.r = this.rBase;
     }
   }
 
   show() {
-    fill(this.alpha, this.alpha, this.alpha);
+    fill(this.alpha);
+    noStroke();
+    // draw the 'star'
+    ellipse(this.pos.x, this.pos.y, this.r, this.r);
+    stroke(this.alpha);
+    strokeWeight(this.r);
+    // draw trajectory
+    line(this.prevPos.x, this.prevPos.y, this.pos.x, this.pos.y);
 
     // initial fade-in
     let rnd = random(30, 60);
     (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
     this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
 
-    // draw the 'star'
-    ellipse(this.pos.x, this.pos.y, this.r, this.r);
   }
 
   turboMod() {
@@ -193,6 +201,11 @@ class star {
     } else {
       this.turbo = falloff(this.turbo);
     }
+  }
+
+  updatePrevPos() {
+    this.prevPos.x = this.pos.x;
+    this.prevPos.y = this.pos.y;
   }
 }
 
@@ -223,8 +236,9 @@ function draw() {
     stars[i].turboMod();
     totalTurbo += stars[i].turbo;
   }
-  // const curveUp = x => pow(x / stars.length, 0.8);
-  let bgAlpha = 255 - 255 * totalTurbo / stars.length;
+  const curveUp = x => pow(x, 0.5);
+  let x = curveUp(bass); // bass
+  let bgAlpha = 255 - 255 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
 
   // shoot the stars!
@@ -252,6 +266,7 @@ function draw() {
 
   // draw rectangle for bass reference
   if (bassRef) {
+    noStroke();
     fill(50);
     rect(w - 42, 10, 32, 200);
     fill(255);
