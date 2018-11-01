@@ -237,7 +237,7 @@ function draw() {
     totalTurbo += stars[i].turbo;
   }
   const curveUp = x => pow(x, 0.5);
-  let x = curveUp(bass); // bass
+  let x = curveUp(totalTurbo / stars.length); // bass
   let bgAlpha = 255 - 255 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
 
