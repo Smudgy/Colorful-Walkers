@@ -8,6 +8,7 @@ let spawnpoint;
 let mouseVec;
 let mouseTracking = true;
 let mouseVecAngle = 225;
+let offset = 0;
 
 // global audio array, computated by wallpaperAudioListener()
 let nrofBands = 32;
@@ -226,9 +227,12 @@ function setup() {
 }
 
 function draw() {
+  noiseDetail(4, 0.5);
+  let xNoise = noise(offset) * w;
   mouseTracking ?
-    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize() :
+    mouseVec = createVector(xNoise, 0).sub(origin).normalize() :
     mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
+  offset += 0.01;
 
   //background coloring on turbo values
   let totalTurbo = 0;
