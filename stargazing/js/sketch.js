@@ -6,48 +6,22 @@ let n = 250;
 let origin;
 let spawnpoint;
 let mouseVec;
-let mouseTracking = true;
+let turnrate = 0.2;
+let turboSpeed = 8; // default: 8
+let tracking = 0; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
 let mouseVecAngle = 225;
-let offset = 0;
+let offsetX = Math.random() * 1000;
+let offsetY = Math.random() * 1000;
 
 // global audio array, computated by wallpaperAudioListener()
-let nrofBands = 32;
+let nrofBands = 32; // currently not in use
 let normTop = 0.1;
 let noiseGate = 0.1;
 let bandCount = 0;
-let bassRef = true;
+let reference = true;
 
-let audArr = new Array(nrofBands);
+let audArr = new Array(nrofBands); // currently not in use
 let bass = 0;
-
-window.wallpaperPropertyListener = {
-  applyUserProperties: function (p) {
-    // amount of stars
-    if (p.amount) {
-      n = p.amount.value;
-    }
-    // show bass reference
-    if (p.bassRef) {
-      bassRef = p.bassRef.value;
-    }
-    // nrof of bands
-    if (p.nrofBands) {
-      nrofBands = p.nrofBands.value;
-      stars = [];
-    }
-    // show bass reference
-    if (p.showBass) {
-      bassRef = p.showBass.value;
-    }
-    // mousetracking
-    if (p.mouseTracking) {
-      mouseTracking = p.mouseTracking.value;
-    }
-    if (p.mouseVecAngle) {
-      mouseVecAngle = p.mouseVecAngle.value;
-    }
-  }
-}
 
 // ----------------------- WallpaperAudioListener -----------------------
 // predefined wallpaper engine function
@@ -131,82 +105,70 @@ function calcBass(arr) {
   return (arr.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top));
 }
 
-// ----------------------- star -----------------------
-class star {
-  constructor(x, y) {
-    // physical/positional attributes
-    this.width = random();
-    this.z = pow(this.width, 3); // inverse square law
-    this.angleMod = random(-2, 2);
-    this.pos = createVector(x, y);
-    this.prevPos = this.pos.copy();
-    this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
-
-    // functional attributes
-    this.turbo = 0; // [0, 1] 
-
-    // visual attributes
-    this.alphaUB = map(this.width, 0, 1, 125, 200) + random(-50, 50);
-    this.alpha = 0;
-    this.rBase = 1 + this.z;
-    this.r = this.rBase;
-  }
-
-  // star methods
-  shoot() {
-    this.updatePrevPos();
-
-    // calculate angle change from the global variable mouseVec
-    const diff = mouseVec.copy().mult(this.z).rotate(this.angleMod).sub(this.vel).mult(0.02);
-    this.vel = this.vel.add(diff).normalize().mult(this.z);
-
-    this.pos.add(this.vel);
-
-    // if there is turbo
-    if (this.turbo > 0) {
-      // positional attributes
-      let turboVec = this.vel.copy();
-      let turboSpeed = 8; // default: 8
-      turboVec.mult(turboSpeed * this.turbo);
-      this.pos.add(turboVec);
-
-      // visual attributes
-      // let altAlpa = abs(30 - 25 * this.turbo);
-      // (this.alpha + this.alphaUB / altAlpa < this.alphaUB) ?
-      // this.alpha += this.alphaUB / altAlpa: this.alpha = this.alphaUB;
-      this.r = this.rBase;
+// ----------------------- WallpaperPropertyListener -----------------------
+// predefined wallpaper engine function
+window.wallpaperPropertyListener = {
+  applyUserProperties: function (p) {
+    // amount of stars
+    if (p.amount) {
+      n = p.amount.value;
     }
-  }
-
-  show() {
-    fill(this.alpha);
-    noStroke();
-    // draw the 'star'
-    ellipse(this.pos.x, this.pos.y, this.r, this.r);
-    stroke(this.alpha);
-    strokeWeight(this.r);
-    // draw trajectory
-    line(this.prevPos.x, this.prevPos.y, this.pos.x, this.pos.y);
-
-    // initial fade-in
-    let rnd = random(30, 60);
-    (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
-    this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
-
-  }
-
-  turboMod() {
-    const falloff = x => (x - 0.01) / 1.1; // x => (x - 0.01) / 1.05;
-    if (this.turbo <= bass || falloff(this.turbo) < bass) {
-      this.turbo = bass;
-    } else {
-      this.turbo = falloff(this.turbo);
+    // show bass reference
+    if (p.reference) {
+      reference = p.reference.value;
     }
-  }
+    // // nrof of bands
+    // if (p.nrofBands) {
+    //   nrofBands = p.nrofBands.value;
+    //   stars = [];
+    // }
+    // show bass reference
+    if (p.showBass) {
+      bassRef = p.showBass.value;
+    }
 
-  updatePrevPos() {
-    this.prevPos.x = this.pos.x;
-    this.prevPos.y = this.pos.y;
+    // tracking
+    if (p.tracking) {
+      tracking = p.tracking.value;
+      snapAllStars();
+    }
+    if (p.mouseVecAngle && tracking == 0) {
+      mouseVecAngle = p.mouseVecAngle.value;
+      mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
+      snapAllStars();
+    }
+    if (p.mouseOrigin && (tracking == 1 || tracking == 2)) {
+      switch (p.mouseOrigin.value) {
+        case 0: // TOP
+          origin = createVector(w / 2, 0);
+          break;
+        case 1: // BOTTOM
+          origin = createVector(w / 2, h);
+          break;
+        case 2: // RIGHT
+          origin = createVector(w, h / 2);
+          break;
+        case 3: // LEFT
+          origin = createVector(0, h / 2);
+          break;
+        case 4: // CENTER
+          origin = createVector(w / 2, h / 2);
+          break;
+        default:
+          origin = createVector(w / 2, -w / 6);
+          break;
+      }
+      snapAllStars();
+    }
+    if (p.turnrate && (tracking == 1 || tracking == 2)) {
+      turnrate = Math.pow(p.turnrate.value / 100.0, 2);
+      if (turnrate < 30) {
+        snapAllStars();
+      }
+    }
+    if (p.turboSpeed) {
+      turboSpeed = p.turboSpeed.value;
+    }
   }
 }
 
@@ -214,25 +176,30 @@ class star {
 function setup() {
   w = window.innerWidth;
   h = window.innerHeight;
-  origin = createVector(w / 2, -w / 6);
-  mouseVec = createVector(w, h).sub(origin).normalize();
+  origin = createVector(w / 2, 0);
 
+  // some default settings
   angleMode(DEGREES);
   colorMode(RGB);
   frameRate(30);
   createCanvas(w, h);
   noStroke();
-
+  noiseDetail(4, 0.5);
   //tryWallpaperApi();
 }
 
 function draw() {
-  noiseDetail(4, 0.5);
-  let xNoise = noise(offset) * w;
-  mouseTracking ?
-    mouseVec = createVector(xNoise, 0).sub(origin).normalize() :
+  if (tracking == 0) {
     mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
-  offset += 0.01;
+  } else if (tracking == 1) {
+    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize()
+  } else if (tracking == 2) {
+    let noiseX = noise(offsetX);
+    let noiseY = noise(offsetY);
+    mouseVec = createVector(noiseX * w, noiseY * h).sub(origin).normalize()
+    offsetX += 0.0005;
+    offsetY += 0.0005;
+  }
 
   //background coloring on turbo values
   let totalTurbo = 0;
@@ -242,7 +209,7 @@ function draw() {
   }
   const curveUp = x => pow(x, 0.5);
   let x = curveUp(totalTurbo / stars.length); // bass
-  let bgAlpha = 255 - 255 * x;
+  let bgAlpha = 255 - 200 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
 
   // shoot the stars!
@@ -268,13 +235,23 @@ function draw() {
 
   setStars();
 
-  // draw rectangle for bass reference
-  if (bassRef) {
+  // draw page information
+  if (reference) {
     noStroke();
     fill(50);
     rect(w - 42, 10, 32, 200);
     fill(255);
     rect(w - 42, 10, 32, bass * 200);
+
+    const x = w - 26;
+    const y = 236;
+    fill(50);
+    ellipse(x, y, 32, 32);
+    stroke(120);
+    fill(120);
+    strokeWeight(2);
+    ellipse(x, y, 4, 4);
+    line(x, y, x + 16 * mouseVec.x, y + 16 * mouseVec.y)
   }
 }
 
@@ -291,6 +268,12 @@ function setStars() {
   }
   while (stars.length > n) {
     stars.pop();
+  }
+}
+
+function snapAllStars() {
+  for (star of stars) {
+    star.snap();
   }
 }
 
