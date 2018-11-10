@@ -123,9 +123,6 @@ window.wallpaperPropertyListener = {
     //   stars = [];
     // }
     // show bass reference
-    if (p.showBass) {
-      bassRef = p.showBass.value;
-    }
 
     // tracking
     if (p.tracking) {
@@ -272,8 +269,8 @@ function setStars() {
 }
 
 function snapAllStars() {
-  for (star of stars) {
-    star.snap();
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].snap();
   }
 }
 

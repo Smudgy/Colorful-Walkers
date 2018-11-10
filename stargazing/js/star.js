@@ -14,8 +14,12 @@ class star {
     this.turbo = 0; // [0, 1] 
 
     // visual attributes
-    this.alphaUB = map(this.width, 0, 1, 125, 200) + random(-50, 50);
+    this.alphaUB = map(this.width, 0, 1, 100, 170) + random(-80, 80);
+    this.colCountUB = map(this.width, 0, 1, 100, 170) + random(-80, 80);
+    if (this.colCountUB < this.alphaUB) this.colCountUB = this.alphaUB; // prevent stars going yellow-ish
     this.alpha = 0;
+    this.colCount = 0;
+
     this.rBase = 1 + this.z;
     this.r = this.rBase;
   }
@@ -50,11 +54,12 @@ class star {
   }
 
   show() {
-    fill(this.alpha);
+    const col = color(this.colCount, this.colCount, this.alpha);
+    fill(col);
     noStroke();
     // draw the 'star'
     ellipse(this.pos.x, this.pos.y, this.r, this.r);
-    stroke(this.alpha);
+    stroke(col);
     strokeWeight(this.r);
     // draw trajectory
     line(this.prevPos.x, this.prevPos.y, this.pos.x, this.pos.y);
@@ -63,6 +68,8 @@ class star {
     let rnd = random(30, 60);
     (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
     this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
+    (this.colCount + this.colCountUB / rnd < this.colCountUB) ?
+    this.colCount += this.colCountUB / rnd: this.colCount = this.colCountUB;
 
   }
 
