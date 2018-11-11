@@ -11,14 +11,14 @@ class star {
     //this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
 
     // functional attributes
-    this.turbo = 0; // [0, 1] 
+    this.turbo = 0; // [0, 1]
+    this.alive = 0;
+    this.lifetime = random(120, 720); // random lifetime
+    this.dead = false;
 
     // visual attributes
     this.alphaUB = map(this.width, 0, 1, 100, 170) + random(-80, 80);
-    this.colCountUB = map(this.width, 0, 1, 100, 170) + random(-80, 80);
-    if (this.colCountUB < this.alphaUB) this.colCountUB = this.alphaUB; // prevent stars going yellow-ish
     this.alpha = 0;
-    this.colCount = 0;
 
     this.rBase = 1 + this.z;
     this.r = this.rBase;
@@ -54,23 +54,35 @@ class star {
   }
 
   show() {
-    const col = color(this.colCount, this.colCount, this.alpha);
-    fill(col);
-    noStroke();
+    if (this.alive < this.lifetime) { // star is alive
+      this.draw();
+      // initial fade-in
+      let rnd = random(30, 60);
+      (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
+      this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
+    } else if (this.alpha > 0) { // star is dying..
+      this.draw();
+      // death fade-out
+      const fadeout = x => (x - random()) / 1.05; // x => (x - 0.01) / 1.05;
+      const fade = 1;
+      (fadeout(this.alpha) > 0) ?
+      this.alpha = fadeout(this.alpha): this.alpha = 0;
+    } else { // star is dead
+      this.dead = true;
+    }
+    this.alive++;
+  }
+  draw() {
+    const col = color(this.alpha, this.alpha, this.alpha);
     // draw the 'star'
     ellipse(this.pos.x, this.pos.y, this.r, this.r);
+    fill(col);
+    noStroke();
+    // draw trajectory
     stroke(col);
     strokeWeight(this.r);
-    // draw trajectory
+    strokeCap(ROUND);
     line(this.prevPos.x, this.prevPos.y, this.pos.x, this.pos.y);
-
-    // initial fade-in
-    let rnd = random(30, 60);
-    (this.alpha + this.alphaUB / rnd < this.alphaUB) ?
-    this.alpha += this.alphaUB / rnd: this.alpha = this.alphaUB;
-    (this.colCount + this.colCountUB / rnd < this.colCountUB) ?
-    this.colCount += this.colCountUB / rnd: this.colCount = this.colCountUB;
-
   }
 
   turboMod() {
