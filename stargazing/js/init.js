@@ -6,9 +6,10 @@ let n = 250;
 let origin;
 let spawnpoint;
 let mouseVec;
-let turnrate = 0.2;
+let followVec;
+let turnrate = Math.pow(20 / 100.0, 2);;
 let turboSpeed = 8; // default: 8
-let tracking = 0; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
+let tracking = 1; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
 let mouseVecAngle = 225;
 let offsetX = Math.random() * 1000;
 let offsetY = Math.random() * 1000;

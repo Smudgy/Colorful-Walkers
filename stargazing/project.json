@@ -104,7 +104,7 @@
         "max": 100,
         "text": "Turnrate of the stars<br> <small><i>(default is 14, 100 is instantly)</i></small><br>",
         "type": "slider",
-        "value": 14
+        "value": 20
       },
       "turboSpeed":
       {

@@ -4,10 +4,10 @@ class star {
     // physical/positional attributes
     this.width = random();
     this.z = pow(this.width, 3); // inverse square law
-    this.angleMod = random(-2, 2);
+    this.angleMod = random(-3, 3);
     this.pos = createVector(x, y);
     this.prevPos = this.pos.copy();
-    this.vel = mouseVec.copy().mult(this.z).rotate(this.angleMod);
+    this.vel = followVec.copy().mult(this.z).rotate(this.angleMod);
     //this.vel = createVector(0, 1).mult(this.z).rotate(this.angleMod);
 
     // functional attributes
@@ -28,9 +28,8 @@ class star {
   shoot() {
     this.updatePrevPos();
 
-    // calculate angle change from the global variable mouseVec
-    const diff = mouseVec.copy().mult(this.z).rotate(this.angleMod).sub(this.vel).mult(turnrate);
-    this.vel = this.vel.add(diff).normalize().mult(this.z);
+    // calculate angle change from the global variable followVec
+    this.vel = followVec.copy().rotate(this.angleMod).normalize().mult(this.z);
 
     this.pos.add(this.vel);
 
@@ -51,6 +50,7 @@ class star {
 
   snap() {
     this.vel = mouseVec.copy().mult(this.z).rotate(this.angleMod);
+    followVec = mouseVec.copy();
   }
 
   show() {
@@ -63,8 +63,7 @@ class star {
     } else if (this.alpha > 0) { // star is dying..
       this.draw();
       // death fade-out
-      const fadeout = x => (x - random()) / 1.05; // x => (x - 0.01) / 1.05;
-      const fade = 1;
+      const fadeout = x => (x - 0.05) / 1.05; // x => (x - 0.01) / 1.05;
       (fadeout(this.alpha) > 0) ?
       this.alpha = fadeout(this.alpha): this.alpha = 0;
     } else { // star is dead

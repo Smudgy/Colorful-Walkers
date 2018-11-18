@@ -3,6 +3,8 @@ function setup() {
   w = window.innerWidth;
   h = window.innerHeight;
   origin = createVector(w / 2, 0);
+  setupMouseVec();
+  followVec = mouseVec.copy();
 
   // some default settings
   angleMode(DEGREES);
@@ -15,17 +17,10 @@ function setup() {
 }
 
 function draw() {
-  if (tracking == 0) {
-    mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
-  } else if (tracking == 1) {
-    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize()
-  } else if (tracking == 2) {
-    let noiseX = noise(offsetX);
-    let noiseY = noise(offsetY);
-    mouseVec = createVector(noiseX * w, noiseY * h).sub(origin).normalize()
-    offsetX += 0.0005;
-    offsetY += 0.0005;
-  }
+  // vector creation
+  setupMouseVec();
+  const diff = mouseVec.copy().sub(followVec).mult(turnrate);
+  followVec = followVec.add(diff).normalize();
 
   //background coloring on turbo values
   let totalTurbo = 0;
@@ -131,6 +126,20 @@ function setStars() {
 function snapAllStars() {
   for (let i = 0; i < stars.length; i++) {
     stars[i].snap();
+  }
+}
+
+function setupMouseVec() {
+  if (tracking == 0) {
+    mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
+  } else if (tracking == 1) {
+    mouseVec = createVector(mouseX, mouseY).sub(origin).normalize()
+  } else if (tracking == 2) {
+    let noiseX = noise(offsetX);
+    let noiseY = noise(offsetY);
+    mouseVec = createVector(noiseX * w, noiseY * h).sub(origin).normalize()
+    offsetX += 0.0005;
+    offsetY += 0.0005;
   }
 }
 
