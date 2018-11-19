@@ -30,7 +30,7 @@ function draw() {
   }
   const curveUp = x => pow(x, 0.5);
   let x = curveUp(totalTurbo / stars.length); // bass
-  let bgAlpha = 255 - 200 * x;
+  let bgAlpha = 255 - 180 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
 
   // shoot the stars!
@@ -138,8 +138,8 @@ function setupMouseVec() {
     let noiseX = noise(offsetX);
     let noiseY = noise(offsetY);
     mouseVec = createVector(noiseX * w, noiseY * h).sub(origin).normalize()
-    offsetX += 0.0005;
-    offsetY += 0.0005;
+    offsetX += 0.001;
+    offsetY += 0.001;
   }
 }
 
