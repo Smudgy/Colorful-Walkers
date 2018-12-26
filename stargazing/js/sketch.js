@@ -17,11 +17,6 @@ function setup() {
 }
 
 function draw() {
-  // vector creation
-  setupMouseVec();
-  const diff = mouseVec.copy().sub(followVec).mult(turnrate);
-  followVec = followVec.add(diff).normalize();
-
   //background coloring on turbo values
   let totalTurbo = 0;
   for (let i = 0; i < stars.length; i++) {
@@ -32,6 +27,13 @@ function draw() {
   let x = curveUp(totalTurbo / stars.length); // bass
   let bgAlpha = 255 - 180 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
+
+  // vector creation
+  setupMouseVec();
+  const diff = mouseVec.copy().sub(followVec).mult((totalTurbo / stars.length) * turnrate);
+  followVec = followVec.add(diff).normalize();
+
+
 
   // shoot the stars!
   for (let star of stars) {
