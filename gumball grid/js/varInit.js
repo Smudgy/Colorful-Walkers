@@ -1,5 +1,5 @@
 window.wallpaperPropertyListener = {
-  applyUserProperties: function(properties) {
+  applyUserProperties: function (properties) {
     if (properties.bgMode) {
       bgMode = properties.bgMode.value;
       preload();
@@ -7,7 +7,7 @@ window.wallpaperPropertyListener = {
       setup();
     }
     if (properties.Image) {
-      if ( properties.Image.value ){
+      if (properties.Image.value) {
         bgImage = 'file:///' + properties.Image.value;
       } else {
         bgImage = "bg.jpg";
@@ -26,11 +26,11 @@ window.wallpaperPropertyListener = {
       bgColor_b = Math.ceil(bgColor[2] * 255);
     }
     if (properties.bgColorAlpha) {
-      bgColorAlpha = Math.ceil(properties.bgColorAlpha.value * 255/100);
+      bgColorAlpha = Math.ceil(properties.bgColorAlpha.value * 255 / 100);
     }
 
     if (properties.spacing) {
-      n = Math.max( properties.spacing.value, 25 );
+      n = Math.max(properties.spacing.value, 25);
       // clear the grid and make a new one
       dots = [];
       setup();
@@ -48,8 +48,10 @@ window.wallpaperPropertyListener = {
       setup();
       circleShow = true;
       // clear timer, make a new one
-      clearTimeout( circleTimer );
-      circleTimer = setTimeout(() => {circleShow = false;}, 1000);
+      clearTimeout(circleTimer);
+      circleTimer = setTimeout(() => {
+        circleShow = false;
+      }, 1000);
     }
 
     if (properties.sh1) {
@@ -69,7 +71,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.shp) {
-      shp = 5.0 / ( 10.0 / ( properties.shp.value + 6 ));
+      shp = 5.0 / (10.0 / (properties.shp.value + 6));
     }
 
     if (properties.rad1) {
@@ -85,7 +87,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.radp) {
-      radp = 5.0 / ( 10.0 / ( properties.radp.value + 6 ));
+      radp = 5.0 / (10.0 / (properties.radp.value + 6));
     }
 
     if (properties.rou1) {
@@ -99,7 +101,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.roup) {
-      roup = 5.0 / ( 10.0 / ( properties.roup.value + 6 ));
+      roup = 5.0 / (10.0 / (properties.roup.value + 6));
     }
 
     if (properties.hue1) {
@@ -113,7 +115,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.huep) {
-      huep = 5.0 / ( 10.0 / ( properties.huep.value + 6 ));
+      huep = 5.0 / (10.0 / (properties.huep.value + 6));
     }
     if (properties.hueLoop) {
       hueLoop = properties.hueLoop.value / 10.0;
@@ -130,7 +132,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.rotp) {
-      rotp = 5.0 / ( 10.0 / ( properties.rotp.value + 6 ));
+      rotp = 5.0 / (10.0 / (properties.rotp.value + 6));
     }
     if (properties.rotLoop) {
       rotLoop = properties.rotLoop.value / 10.0;
@@ -147,7 +149,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.satp) {
-      satp = 5.0 / ( 10.0 / ( properties.satp.value + 6 ));
+      satp = 5.0 / (10.0 / (properties.satp.value + 6));
     }
 
     if (properties.lum1) {
@@ -161,7 +163,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.lump) {
-      lump = 5.0 / ( 10.0 / ( properties.lump.value + 6 ));
+      lump = 5.0 / (10.0 / (properties.lump.value + 6));
     }
 
     if (properties.a1) {
@@ -175,7 +177,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.ap) {
-      ap = 5.0 / ( 10.0 / ( properties.ap.value + 6 ));
+      ap = 5.0 / (10.0 / (properties.ap.value + 6));
     }
 
     if (properties.rat1) {
@@ -191,7 +193,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.ratp) {
-      ratp = 5.0 / ( 10.0 / ( properties.ratp.value + 6 ));
+      ratp = 5.0 / (10.0 / (properties.ratp.value + 6));
     }
 
     if (properties.poly) {
@@ -213,7 +215,7 @@ window.wallpaperPropertyListener = {
       calcMaxDist();
     }
     if (properties.cornp) {
-      cornp = 5.0 / ( 10.0 / ( properties.cornp.value + 6 ));
+      cornp = 5.0 / (10.0 / (properties.cornp.value + 6));
     }
 
     if (properties.sinedot) {
@@ -222,22 +224,22 @@ window.wallpaperPropertyListener = {
     }
     if (properties.amp) {
       amp = properties.amp.value * 10;
-      movingDot = new Sinedot( amp, freq, speed, delay );
+      movingDot = new Sinedot(amp, freq, speed, delay);
       sinedotShow = true;
     }
     if (properties.freq) {
       freq = properties.freq.value / 10.0;
-      movingDot = new Sinedot( amp, freq, speed, delay );
+      movingDot = new Sinedot(amp, freq, speed, delay);
       sinedotShow = true;
     }
     if (properties.speed) {
       speed = properties.speed.value;
-      movingDot = new Sinedot( amp, freq, speed, delay );
+      movingDot = new Sinedot(amp, freq, speed, delay);
       sinedotShow = true;
     }
     if (properties.delay) {
       delay = properties.delay.value * 10;
-      movingDot = new Sinedot( amp, freq, speed, delay );
+      movingDot = new Sinedot(amp, freq, speed, delay);
       sinedotShow = true;
     }
 
@@ -268,10 +270,12 @@ let circleTimer;
 let img; // loadImage variable
 let bgImage = 'bg.jpg';
 let bgG; // createGraphics
-let bgMode = true;
+let bgMode = false;
 let ImageGray = false;
 let busy = false;
-let bgColor_r = 20, bgColor_g = 20, bgColor_b = 20;
+let bgColor_r = 20,
+  bgColor_g = 20,
+  bgColor_b = 20;
 let bgColorAlpha = 0;
 
 // customizable variables
@@ -353,13 +357,13 @@ let amp = 85;
 let freq = 1;
 let speed = 6;
 let delay = 120;
-let maxDist = Math.max( radd, shd, roud, hued, satd, lumd, ad, cornd, rotd, ratd);
+let maxDist = Math.max(radd, shd, roud, hued, satd, lumd, ad, cornd, rotd, ratd);
 
 function calcMaxDist() {
-  if ( poly ) {
-    maxDist = Math.max( radd, shd, hued, satd, lumd, ad, cornd, rotd);
+  if (poly) {
+    maxDist = Math.max(radd, shd, hued, satd, lumd, ad, cornd, rotd);
   } else {
-    maxDist = Math.max( radd, shd, roud, hued, satd, lumd, ad, rotd, ratd);
+    maxDist = Math.max(radd, shd, roud, hued, satd, lumd, ad, rotd, ratd);
   }
 }
 
