@@ -3,16 +3,16 @@ let h;
 let stars = [];
 let n = 250;
 
-let origin;
+let origin; // tracking == 1
 let spawnpoint;
 let mouseVec;
 let followVec;
 let turnrate = Math.pow(20 / 100.0, 2);;
 let turboSpeed = 8; // default: 8
 let tracking = 1; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
-let mouseVecAngle = 225;
-let offsetX = Math.random() * 1000;
-let offsetY = Math.random() * 1000;
+let mouseVecAngle = 225; // tracking == 0
+let noiseRate = 0.1; // tracking == 2
+let time = 0;
 
 // global audio array, computated by wallpaperAudioListener()
 let nrofBands = 32; // currently not in use

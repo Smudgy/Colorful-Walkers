@@ -50,7 +50,6 @@ class star {
 
   snap() {
     this.vel = mouseVec.copy().mult(this.z).rotate(this.angleMod);
-    followVec = mouseVec.copy();
   }
 
   show() {
@@ -74,9 +73,9 @@ class star {
   draw() {
     const col = color(this.alpha, this.alpha, this.alpha);
     // draw the 'star'
-    ellipse(this.pos.x, this.pos.y, this.r, this.r);
-    fill(col);
     noStroke();
+    fill(col);
+    ellipse(this.pos.x, this.pos.y, this.r, this.r);
     // draw trajectory
     stroke(col);
     strokeWeight(this.r);

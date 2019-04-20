@@ -9,13 +9,10 @@
   "monetization": false,
   "tags": ["Abstract"],
   "visibility": "public",
-  "general":
-  {
+  "general": {
     "supportsaudioprocessing": true,
-    "properties":
-    {
-      "amount":
-      {
+    "properties": {
+      "amount": {
         "order": 1.00,
         "editable": true,
 
@@ -25,36 +22,33 @@
         "type": "slider",
         "value": 300
       },
-      "reference":
-      {
+      "reference": {
         "order": 1.2,
 
         "text": "Show page reference values? (top right)",
         "type": "bool",
         "value": false
       },
-      "tracking":
-      {
+      "tracking": {
         "order": 1.21,
-        "options": [
-        {
-          "label": "Set angle",
-          "value": 0
-        },
-        {
-          "label": "Mouse tracking",
-          "value": 1
-        },
-        {
-          "label": "Random",
-          "value": 2
-        }],
+        "options": [{
+            "label": "Set angle",
+            "value": 0
+          },
+          {
+            "label": "Mouse tracking",
+            "value": 1
+          },
+          {
+            "label": "Random",
+            "value": 2
+          }
+        ],
         "text": "Tracking mode",
         "type": "combo",
         "value": 1
       },
-      "mouseVecAngle":
-      {
+      "mouseVecAngle": {
         "order": 1.221,
         "editable": true,
         "condition": "tracking.value == 0",
@@ -65,40 +59,38 @@
         "type": "slider",
         "value": 225
       },
-      "mouseOrigin":
-      {
+      "mouseOrigin": {
         "order": 1.222,
-        "condition": "tracking.value == 1 || tracking.value == 2",
-        "options": [
-        {
-          "label": "Top",
-          "value": 0
-        },
-        {
-          "label": "Bottom",
-          "value": 1
-        },
-        {
-          "label": "Right",
-          "value": 2
-        },
-        {
-          "label": "Left",
-          "value": 3
-        },
-        {
-          "label": "Center",
-          "value": 4
-        }],
-        "text": "<b>[mouse/random]</b><br>Where should the origin point of the stars come from?",
+        "condition": "tracking.value == 1",
+        "options": [{
+            "label": "Top",
+            "value": 0
+          },
+          {
+            "label": "Bottom",
+            "value": 1
+          },
+          {
+            "label": "Right",
+            "value": 2
+          },
+          {
+            "label": "Left",
+            "value": 3
+          },
+          {
+            "label": "Center",
+            "value": 4
+          }
+        ],
+        "text": "<b>[mouse]</b><br>Where should the origin point of the stars come from?",
         "type": "combo",
         "value": 0
       },
-      "turnrate":
-      {
+      "turnrate": {
         "order": 1.223,
         "editable": false,
-        "condition": "tracking.value == 1 || tracking.value == 2",
+        "condition": "tracking.value == 1",
 
         "min": 1,
         "max": 100,
@@ -106,8 +98,7 @@
         "type": "slider",
         "value": 20
       },
-      "turboSpeed":
-      {
+      "turboSpeed": {
         "order": 1.224,
         "editable": true,
 
