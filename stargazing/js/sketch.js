@@ -1,3 +1,6 @@
+let angleOff = 0;
+let pressVec;
+
 // ----------------------- p5 setup() and draw() -----------------------
 function setup() {
   w = window.innerWidth;
@@ -17,23 +20,21 @@ function setup() {
 }
 
 function draw() {
-  //background coloring on turbo values
+  // background coloring on turbo values
   let totalTurbo = 0;
   for (let i = 0; i < stars.length; i++) {
     stars[i].turboMod();
     totalTurbo += stars[i].turbo;
   }
-  const curveUp = x => pow(x, 0.5);
+  const curveUp = x => pow(x, 0.1);
   let x = curveUp(totalTurbo / stars.length); // bass
-  let bgAlpha = 255 - 180 * x;
+  let bgAlpha = 255 - 130 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
 
   // vector creation
   setupMouseVec();
   const diff = mouseVec.copy().sub(followVec).mult((totalTurbo / stars.length) * turnrate);
   followVec = followVec.add(diff).normalize();
-
-
 
   // shoot the stars!
   for (let star of stars) {
@@ -59,38 +60,43 @@ function draw() {
   setStars();
 
   // draw page information
-  if (reference) {
-    textSize(12);
-    textAlign(CENTER, CENTER);
-
-    // bass
-    noStroke();
-    fill(50);
-    rect(w - 42, 10, 32, 200);
-    fill(255);
-    rect(w - 42, 10, 32, bass * 200);
-
-    // mouseVec
-    const x = w - 26;
-    const y = 236;
-    fill(50);
-    ellipse(x, y, 32, 32);
-    stroke(120);
-    fill(120);
-    strokeWeight(2);
-    ellipse(x, y, 4, 4);
-    strokeCap(ROUND);
-    line(x, y, x + 16 * mouseVec.x, y + 16 * mouseVec.y)
-
-    // stars
-    fill(180);
-    noStroke();
-    text(stars.length, x, y + 32);
-    text("stars", x, y + 48);
+  if (reference && stars.length != 0) {
+    drawUI(stars[0].turbo);
   }
 }
 
 // ----------------------- other methods -----------------------
+function drawUI(amp) {
+  textSize(12);
+  textAlign(CENTER, CENTER);
+
+  // bass
+  noStroke();
+  fill(50);
+  rect(w - 42, 10, 32, 200);
+
+  fill(255, 255, 255);
+  rect(w - 42, 10, 32, amp * 200);
+
+  // mouseVec
+  const x = w - 26;
+  const y = 236;
+  fill(50);
+  ellipse(x, y, 32, 32);
+  stroke(120);
+  fill(120);
+  strokeWeight(2);
+  ellipse(x, y, 4, 4);
+  strokeCap(ROUND);
+  line(x, y, x + 16 * mouseVec.x, y + 16 * mouseVec.y)
+
+  // stars
+  fill(180);
+  noStroke();
+  text(stars.length, x, y + 32);
+  text("stars", x, y + 48);
+}
+
 function setStars() {
   for (let i = 0; i < stars.length;) {
     if (stars[i].dead) {
@@ -126,6 +132,7 @@ function setStars() {
 }
 
 function snapAllStars() {
+  followVec = mouseVec.copy();
   for (let i = 0; i < stars.length; i++) {
     stars[i].snap();
   }
@@ -137,11 +144,11 @@ function setupMouseVec() {
   } else if (tracking == 1) {
     mouseVec = createVector(mouseX, mouseY).sub(origin).normalize()
   } else if (tracking == 2) {
-    let noiseX = noise(offsetX);
-    let noiseY = noise(offsetY);
-    mouseVec = createVector(noiseX * w, noiseY * h).sub(origin).normalize()
-    offsetX += 0.001;
-    offsetY += 0.001;
+    let xOff = sin(time) + 1;
+    let yOff = cos(time) + 1;
+    let angle = noise(xOff, yOff) * 360 + angleOff;
+    mouseVec = createVector(0, 1).rotate(angle);
+    time += noiseRate;
   }
 }
 
@@ -161,6 +168,25 @@ function mousePressed() {
   for (let i = 0; i < stars.length; i++) {
     stars[i].turbo = 1;
   }
+  pressVec = createVector(mouseX, mouseY);
+}
+
+function mouseReleased() {
+  relVec = createVector(mouseX, mouseY).sub(pressVec);
+  if (relVec.mag() > 800) {
+    let between = mouseVec.angleBetween(relVec);
+    relVec.rotate(1);
+    if (mouseVec.angleBetween(relVec) < between) {
+      angleOff -= between;
+    } else {
+      angleOff += between;
+    }
+    angleOff = angleOff % 360
+    setupMouseVec();
+    // if (relVec.mag() > 1000) {
+    //   snapAllStars();
+    // }
+  }
 }
 
 function tryWallpaperApi() {
@@ -171,6 +197,7 @@ function tryWallpaperApi() {
   wallpaperAudioListener(aArr);
   console.table(audArr);
 }
+
 // resize function
 window.addEventListener('resize', function () {
   w = canvas.width = window.innerWidth;
