@@ -57,47 +57,17 @@ function draw() {
     }
   }
 
-  setStars();
-
-  // draw page information
-  if (reference && stars.length != 0) {
-    drawUI(stars[0].turbo);
-  }
+  updateSettings();
+  updateStars();
 }
 
 // ----------------------- other methods -----------------------
-function drawUI(amp) {
-  textSize(12);
-  textAlign(CENTER, CENTER);
-
-  // bass
-  noStroke();
-  fill(50);
-  rect(w - 42, 10, 32, 200);
-
-  fill(255, 255, 255);
-  rect(w - 42, 10, 32, amp * 200);
-
-  // mouseVec
-  const x = w - 26;
-  const y = 236;
-  fill(50);
-  ellipse(x, y, 32, 32);
-  stroke(120);
-  fill(120);
-  strokeWeight(2);
-  ellipse(x, y, 4, 4);
-  strokeCap(ROUND);
-  line(x, y, x + 16 * mouseVec.x, y + 16 * mouseVec.y)
-
-  // stars
-  fill(180);
-  noStroke();
-  text(stars.length, x, y + 32);
-  text("stars", x, y + 48);
+function updateSettings() {
+  n = settings["number of stars"];
+  //...
 }
 
-function setStars() {
+function updateStars() {
   for (let i = 0; i < stars.length;) {
     if (stars[i].dead) {
       stars.splice(i, 1);

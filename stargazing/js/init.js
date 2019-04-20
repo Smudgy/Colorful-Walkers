@@ -1,17 +1,11 @@
 let w;
 let h;
 let stars = [];
-let n = 250;
 
 let origin; // tracking == 1
 let spawnpoint;
 let mouseVec;
 let followVec;
-let turnrate = Math.pow(20 / 100.0, 2);;
-let turboSpeed = 8; // default: 8
-let tracking = 1; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
-let mouseVecAngle = 225; // tracking == 0
-let noiseRate = 0.1; // tracking == 2
 let time = 0;
 
 // global audio array, computated by wallpaperAudioListener()
@@ -19,16 +13,42 @@ let nrofBands = 32; // currently not in use
 let normTop = 0.1;
 let noiseGate = 0.1;
 let bandCount = 0;
-let reference = true;
 
 let audArr = new Array(nrofBands); // currently not in use
 let bass = 0;
 
+// objects to be manipulated
+let settings = {
+  'number of stars': 250,
+  'sound speed': 30,
+  tracking: 1,
+  reset: function () {
+    settings['number of stars'] = 250;
+    settings["sound speed"] = 30;
+    settings[tracking] = 1;
+  }
+}
+
+let n = settings["number of stars"];
+let turboSpeed = settings["sound speed"]; // default: 8
+let tracking = 1; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
+let noiseRate = 0.1; // tracking == 2
+let mouseVecAngle = 225; // tracking == 0
+let turnrate = Math.pow(20 / 100.0, 2);
+
+// ----------------------- gui setup -----------------------
+
+function setupGui() {
+  let gui = new dat.GUI();
+  let folder1 = gui.addFolder('stars');
+  gui.add(settings, 'number of stars', 0, 1000, 25);
+  // gui.add(text, 'speed', -5, 5);
+  // gui.add(text, 'displayOutline');
+  // gui.add(text, 'explode');
+  gui.show();
+}
+
 // ----------------------- WallpaperAudioListener -----------------------
-// predefined wallpaper engine function
-window.onload = function () {
-  window.wallpaperRegisterAudioListener(wallpaperAudioListener);
-};
 
 function wallpaperAudioListener(audioArray) {
   /*  adioArray:
@@ -106,66 +126,9 @@ function calcBass(arr) {
   return (arr.slice(0, bassBands).reduce((a, b) => a + b, 0) / (bassBands * top));
 }
 
-// ----------------------- WallpaperPropertyListener -----------------------
-// predefined wallpaper engine function
-window.wallpaperPropertyListener = {
-  applyUserProperties: function (p) {
-    // amount of stars
-    if (p.amount) {
-      n = p.amount.value;
-    }
-    // show bass reference
-    if (p.reference) {
-      reference = p.reference.value;
-    }
-    // // nrof of bands
-    // if (p.nrofBands) {
-    //   nrofBands = p.nrofBands.value;
-    //   stars = [];
-    // }
-    // show bass reference
+// ----------------------- onload -----------------------
 
-    // tracking
-    if (p.tracking) {
-      tracking = p.tracking.value;
-      snapAllStars();
-    }
-    if (p.mouseVecAngle && tracking == 0) {
-      mouseVecAngle = p.mouseVecAngle.value;
-      mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
-      snapAllStars();
-    }
-    if (p.mouseOrigin && (tracking == 1 || tracking == 2)) {
-      switch (p.mouseOrigin.value) {
-        case 0: // TOP
-          origin = createVector(w / 2, 0);
-          break;
-        case 1: // BOTTOM
-          origin = createVector(w / 2, h);
-          break;
-        case 2: // RIGHT
-          origin = createVector(w, h / 2);
-          break;
-        case 3: // LEFT
-          origin = createVector(0, h / 2);
-          break;
-        case 4: // CENTER
-          origin = createVector(w / 2, h / 2);
-          break;
-        default:
-          origin = createVector(w / 2, -w / 6);
-          break;
-      }
-      snapAllStars();
-    }
-    if (p.turnrate && (tracking == 1 || tracking == 2)) {
-      turnrate = Math.pow(p.turnrate.value / 100.0, 2);
-      if (turnrate < 30) {
-        snapAllStars();
-      }
-    }
-    if (p.turboSpeed) {
-      turboSpeed = p.turboSpeed.value;
-    }
-  }
-}
+window.onload = function () {
+  setupGui();
+  window.wallpaperRegisterAudioListener(wallpaperAudioListener);
+};
