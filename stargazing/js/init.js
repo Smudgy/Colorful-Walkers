@@ -21,17 +21,17 @@ let bass = 0;
 let settings = {
   'number of stars': 250,
   'sound speed': 30,
-  tracking: 1,
+  'tracking behavior': 'noise',
   reset: function () {
     settings['number of stars'] = 250;
-    settings["sound speed"] = 30;
-    settings[tracking] = 1;
+    settings['sound speed'] = 30;
+    settings['tracking behavior'] = 'noise';
   }
 }
 
-let n = settings["number of stars"];
-let turboSpeed = settings["sound speed"]; // default: 8
-let tracking = 1; // 0 = set angle, 1 = mouse tracking, 2 = perlin noise tracking
+let n = settings['number of stars'];
+let turboSpeed = settings['sound speed']; // default: 8
+let tracking = settings['tracking behavior'] == 'set angle' ? 0 : settings['tracking behavior'] == 'mouse' ? 1 : 2;
 let noiseRate = 0.1; // tracking == 2
 let mouseVecAngle = 225; // tracking == 0
 let turnrate = Math.pow(20 / 100.0, 2);
@@ -41,7 +41,9 @@ let turnrate = Math.pow(20 / 100.0, 2);
 function setupGui() {
   let gui = new dat.GUI();
   let folder1 = gui.addFolder('stars');
-  gui.add(settings, 'number of stars', 0, 1000, 25);
+  folder1.open();
+  folder1.add(settings, 'number of stars', 0, 1000, 25);
+  folder1.add(settings, 'tracking behavior', ['set angle', 'noise', 'mouse']);
   // gui.add(text, 'speed', -5, 5);
   // gui.add(text, 'displayOutline');
   // gui.add(text, 'explode');

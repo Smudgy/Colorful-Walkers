@@ -63,8 +63,9 @@ function draw() {
 
 // ----------------------- other methods -----------------------
 function updateSettings() {
-  n = settings["number of stars"];
-  //...
+  n = settings['number of stars'];
+  turboSpeed = settings['sound speed']; // default: 8
+  tracking = settings['tracking behavior'] == 'set angle' ? 0 : settings['tracking behavior'] == 'mouse' ? 1 : 2;
 }
 
 function updateStars() {
