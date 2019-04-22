@@ -2,7 +2,6 @@ let w;
 let h;
 let stars = [];
 
-let origin; // tracking == 1
 let spawnpoint;
 let mouseVec;
 let followVec;
@@ -21,34 +20,64 @@ let bass = 0;
 let settings = {
   'number of stars': 250,
   'sound speed': 30,
-  'tracking behavior': 'noise',
+  'follow mouse': false,
+  'angle change rate': 0.1,
+  'star turn rate': 0.4,
+  'background color': [0, 0, 50],
+  'star color': [255, 255, 255],
   reset: function () {
-    settings['number of stars'] = 250;
-    settings['sound speed'] = 30;
-    settings['tracking behavior'] = 'noise';
+    this['number of stars'] = 250;
+    this['sound speed'] = 30;
+    this['follow mouse'] = false;
+    this['background color'] = [0, 0, 50];
+    this['star color'] = [255, 255, 255];
   }
 }
 
 let n = settings['number of stars'];
 let turboSpeed = settings['sound speed']; // default: 8
-let tracking = settings['tracking behavior'] == 'set angle' ? 0 : settings['tracking behavior'] == 'mouse' ? 1 : 2;
-let noiseRate = 0.1; // tracking == 2
-let mouseVecAngle = 225; // tracking == 0
+let tracking = settings['tracking behavior'];
+let noiseRate = 0.1; // !tracking
 let turnrate = Math.pow(20 / 100.0, 2);
+let origin; // tracking
 
 // ----------------------- gui setup -----------------------
 
+let controllers = [];
+let folders = [];
+let bAngleChangeRate;
+let hidden = false;
+let hideTimer;
+
 function setupGui() {
-  let gui = new dat.GUI();
-  let folder1 = gui.addFolder('stars');
-  folder1.open();
-  folder1.add(settings, 'number of stars', 0, 1000, 25);
-  folder1.add(settings, 'tracking behavior', ['set angle', 'noise', 'mouse']);
-  // gui.add(text, 'speed', -5, 5);
-  // gui.add(text, 'displayOutline');
-  // gui.add(text, 'explode');
+  let gui = new dat.GUI({
+    width: 300
+  });
+  folders[0] = gui.addFolder('global');
+  folders[0].open();
+  folders[0].addColor(settings, 'background color').listen();
+  folders[0].addColor(settings, 'star color').listen();
+  controllers[0] = folders[0].add(settings, 'follow mouse').listen();
+  bAngleChangeRate = folders[0].add(settings, 'angle change rate', 0, 1, 0.1).listen();
+
+  folders[1] = gui.addFolder('stars');
+  folders[1].open();
+  folders[1].add(settings, 'number of stars', 0, 1000, 25).listen();
+
+  gui.add(settings, 'reset');
   gui.show();
+
+  // controller handlers
+  controllers[0].onChange((val) => {
+    if (!val) {
+      bAngleChangeRate = folders[0].add(settings, 'angle change rate', 0, 1, 0.1).listen();
+      return;
+    }
+    bAngleChangeRate.remove();
+  });
 }
+
+
 
 // ----------------------- WallpaperAudioListener -----------------------
 

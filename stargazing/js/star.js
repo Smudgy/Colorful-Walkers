@@ -70,9 +70,12 @@ class star {
     }
     this.alive++;
   }
+
   draw() {
-    const col = color(this.alpha, this.alpha, this.alpha);
-    // draw the 'star'
+    push();
+    blendMode(SCREEN);
+    const col = color(settings["star color"][0], settings["star color"][1], settings["star color"][2], this.alpha);
+    // draw the star
     noStroke();
     fill(col);
     ellipse(this.pos.x, this.pos.y, this.r, this.r);
@@ -81,6 +84,7 @@ class star {
     strokeWeight(this.r);
     strokeCap(ROUND);
     line(this.prevPos.x, this.prevPos.y, this.pos.x, this.pos.y);
+    pop();
   }
 
   turboMod() {

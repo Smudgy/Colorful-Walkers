@@ -28,8 +28,9 @@ function draw() {
   }
   const curveUp = x => pow(x, 0.1);
   let x = curveUp(totalTurbo / stars.length); // bass
-  let bgAlpha = 255 - 130 * x;
+  let bgAlpha = 255 - 200 * x;
   bgAlpha > 0 ? background(0, bgAlpha) : background(0);
+  bgAlpha > 0 ? background(settings["background color"][0], settings["background color"][1], settings["background color"][2], bgAlpha) : background(settings["background color"]);
 
   // vector creation
   setupMouseVec();
@@ -65,7 +66,20 @@ function draw() {
 function updateSettings() {
   n = settings['number of stars'];
   turboSpeed = settings['sound speed']; // default: 8
-  tracking = settings['tracking behavior'] == 'set angle' ? 0 : settings['tracking behavior'] == 'mouse' ? 1 : 2;
+  tracking = settings['follow mouse'];
+
+  if (mouseX > w - 400 && mouseY < 200) {
+    if (hidden) {
+      dat.GUI.toggleHide();
+      hidden = false;
+    }
+    // reset timer
+    hideTimer = millis();
+  } else if (millis() - hideTimer > 1000 && !hidden) {
+    // check timer
+    hidden = true;
+    dat.GUI.toggleHide();
+  }
 }
 
 function updateStars() {
@@ -110,11 +124,9 @@ function snapAllStars() {
 }
 
 function setupMouseVec() {
-  if (tracking == 0) {
-    mouseVec = createVector(-1, 0).rotate(mouseVecAngle);
-  } else if (tracking == 1) {
+  if (tracking) {
     mouseVec = createVector(mouseX, mouseY).sub(origin).normalize()
-  } else if (tracking == 2) {
+  } else if (!tracking) {
     let xOff = sin(time) + 1;
     let yOff = cos(time) + 1;
     let angle = noise(xOff, yOff) * 360 + angleOff;
