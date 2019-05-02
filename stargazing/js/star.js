@@ -73,8 +73,9 @@ class star {
 
   draw() {
     push();
-    blendMode(SCREEN);
-    const col = color(settings["star color"][0], settings["star color"][1], settings["star color"][2], this.alpha);
+    const bgCol = color(red(bgColor), green(bgColor), blue(bgColor));
+    const stCol = color(settings["star color"][0], settings["star color"][1], settings["star color"][2]);
+    const col = lerpColor(bgCol, stCol, this.alpha);
     // draw the star
     noStroke();
     fill(col);

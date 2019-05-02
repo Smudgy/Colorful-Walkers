@@ -7,6 +7,10 @@ let mouseVec;
 let followVec;
 let time = 0;
 
+let angleOff = 0;
+let pressVec;
+let bgColor;
+
 // global audio array, computated by wallpaperAudioListener()
 let nrofBands = 32; // currently not in use
 let normTop = 0.1;
@@ -16,21 +20,37 @@ let bandCount = 0;
 let audArr = new Array(nrofBands); // currently not in use
 let bass = 0;
 
-// objects to be manipulated
-let settings = {
-  'number of stars': 250,
-  'sound speed': 30,
-  'follow mouse': false,
-  'angle change rate': 0.1,
-  'star turn rate': 0.4,
-  'background color': [0, 0, 50],
-  'star color': [255, 255, 255],
+let dSettings = { //  impl. and gui
+  'number of stars': 250, // T T
+  'sound speed': 30, // F F
+  'follow mouse': false, // T T
+  'angle change rate': 0.1, // F T
+  'star turn rate': 0.4, // F T
+  'background color': [20, 20, 20], // T T
+  'fade background': true, // T T
+  'bg fade color': [0, 0, 0], // T T
+  'star color': [255, 255, 255], // T T
+  'star trails': 80, // T T
+}
+
+let settings = JSON.parse(localStorage.getItem('stargaze_settings'));
+// setting object to be manipulated
+if (settings === null) {
+  settings = dSettings;
+}
+
+let sfunctions = {
   reset: function () {
-    this['number of stars'] = 250;
-    this['sound speed'] = 30;
-    this['follow mouse'] = false;
-    this['background color'] = [0, 0, 50];
-    this['star color'] = [255, 255, 255];
+    settings['number of stars'] = dSettings['number of stars'];
+    settings['sound speed'] = dSettings['sound speed'];
+    settings['follow mouse'] = dSettings['follow mouse'];
+    settings['background color'] = dSettings['background color'];
+    settings['bg fade color'] = dSettings['bg fade color'];
+    settings['star color'] = dSettings['star color'];
+    settings['star trails'] = dSettings['star trails'];
+  },
+  save: function () {
+    localStorage.setItem('stargaze_settings', JSON.stringify(settings));
   }
 }
 
@@ -45,39 +65,56 @@ let origin; // tracking
 
 let controllers = [];
 let folders = [];
+let fadeColor;
 let bAngleChangeRate;
 let hidden = false;
 let hideTimer;
 
 function setupGui() {
   let gui = new dat.GUI({
-    width: 300
+    width: 300,
+    useLocalStorage: true
   });
-  folders[0] = gui.addFolder('global');
-  folders[0].open();
-  folders[0].addColor(settings, 'background color').listen();
-  folders[0].addColor(settings, 'star color').listen();
-  controllers[0] = folders[0].add(settings, 'follow mouse').listen();
-  bAngleChangeRate = folders[0].add(settings, 'angle change rate', 0, 1, 0.1).listen();
+  gui.addColor(settings, 'background color').listen();
+  gui.addColor(settings, 'star color').listen();
 
-  folders[1] = gui.addFolder('stars');
-  folders[1].open();
-  folders[1].add(settings, 'number of stars', 0, 1000, 25).listen();
+  controllers[1] = gui.add(settings, 'fade background').listen();
+  fadeColor = gui.addFolder("fade color");
+  fadeColor.addColor(settings, 'bg fade color').listen();
+  fadeColor.open();
 
-  gui.add(settings, 'reset');
+  controllers[0] = gui.add(settings, 'follow mouse').listen();
+  bAngleChangeRate = gui.addFolder("angle change over time");
+  bAngleChangeRate.add(settings, 'angle change rate', 0, 1, 0.1).listen();
+  bAngleChangeRate.open();
+
+  gui.add(settings, 'number of stars', 0, 1000, 25).listen();
+  gui.add(settings, 'star trails', 0, 100, 1);
+
+  gui.add(sfunctions, 'reset');
+  gui.add(sfunctions, 'save');
   gui.show();
+  // gui.remember(settings);
 
   // controller handlers
   controllers[0].onChange((val) => {
     if (!val) {
-      bAngleChangeRate = folders[0].add(settings, 'angle change rate', 0, 1, 0.1).listen();
+      bAngleChangeRate.show();
+      bAngleChangeRate.open();
       return;
     }
-    bAngleChangeRate.remove();
+    bAngleChangeRate.hide();
+  });
+
+  controllers[1].onChange((val) => {
+    if (val) {
+      fadeColor.show();
+      fadeColor.open();
+      return;
+    }
+    fadeColor.hide();
   });
 }
-
-
 
 // ----------------------- WallpaperAudioListener -----------------------
 

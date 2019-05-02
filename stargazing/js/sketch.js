@@ -1,6 +1,3 @@
-let angleOff = 0;
-let pressVec;
-
 // ----------------------- p5 setup() and draw() -----------------------
 function setup() {
   w = window.innerWidth;
@@ -28,16 +25,44 @@ function draw() {
   }
   const curveUp = x => pow(x, 0.1);
   let x = curveUp(totalTurbo / stars.length); // bass
-  let bgAlpha = 255 - 200 * x;
-  bgAlpha > 0 ? background(0, bgAlpha) : background(0);
-  bgAlpha > 0 ? background(settings["background color"][0], settings["background color"][1], settings["background color"][2], bgAlpha) : background(settings["background color"]);
+  let bgAlpha = 255 - 255 * x * settings["star trails"] / 100;
+  let fromColor = color(settings["background color"].concat(bgAlpha));
+  let toColor = color(settings["bg fade color"].concat(bgAlpha));
+  settings["fade background"] ? bgColor = lerpColor(fromColor, toColor, totalTurbo / stars.length) : bgColor = color(fromColor);
+
+  background(bgColor);
 
   // vector creation
   setupMouseVec();
   const diff = mouseVec.copy().sub(followVec).mult((totalTurbo / stars.length) * turnrate);
   followVec = followVec.add(diff).normalize();
 
-  // shoot the stars!
+  shootStars();
+  updateSettings();
+  updateStars();
+}
+
+// ----------------------- other methods -----------------------
+function updateSettings() {
+  n = settings['number of stars'];
+  turboSpeed = settings['sound speed']; // default: 8
+  tracking = settings['follow mouse'];
+
+  if (mouseX > w - 350) {
+    if (hidden) {
+      dat.GUI.toggleHide();
+      hidden = false;
+    }
+    // reset timer
+    hideTimer = millis();
+  } else if (millis() - hideTimer > 1000 && !hidden) {
+    // check timer
+    hidden = true;
+    dat.GUI.toggleHide();
+  }
+}
+
+function shootStars() {
   for (let star of stars) {
     star.shoot();
     star.show();
@@ -56,29 +81,6 @@ function draw() {
       star.pos.x = random(0, w);
       star.pos.y = h;
     }
-  }
-
-  updateSettings();
-  updateStars();
-}
-
-// ----------------------- other methods -----------------------
-function updateSettings() {
-  n = settings['number of stars'];
-  turboSpeed = settings['sound speed']; // default: 8
-  tracking = settings['follow mouse'];
-
-  if (mouseX > w - 400 && mouseY < 200) {
-    if (hidden) {
-      dat.GUI.toggleHide();
-      hidden = false;
-    }
-    // reset timer
-    hideTimer = millis();
-  } else if (millis() - hideTimer > 1000 && !hidden) {
-    // check timer
-    hidden = true;
-    dat.GUI.toggleHide();
   }
 }
 
