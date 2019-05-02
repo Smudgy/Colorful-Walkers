@@ -20,6 +20,7 @@ let bandCount = 0;
 let audArr = new Array(nrofBands); // currently not in use
 let bass = 0;
 
+// ----------------------- settings -----------------------
 let dSettings = { //  impl. and gui
   'number of stars': 250, // T T
   'sound speed': 30, // F F
@@ -33,21 +34,18 @@ let dSettings = { //  impl. and gui
   'star trails': 80, // T T
 }
 
+// try to find previous save
 let settings = JSON.parse(localStorage.getItem('stargaze_settings'));
-// setting object to be manipulated
 if (settings === null) {
+  // none existed
   settings = dSettings;
 }
 
-let sfunctions = {
+let guiFunctions = {
   reset: function () {
-    settings['number of stars'] = dSettings['number of stars'];
-    settings['sound speed'] = dSettings['sound speed'];
-    settings['follow mouse'] = dSettings['follow mouse'];
-    settings['background color'] = dSettings['background color'];
-    settings['bg fade color'] = dSettings['bg fade color'];
-    settings['star color'] = dSettings['star color'];
-    settings['star trails'] = dSettings['star trails'];
+    for (const key of Object.keys(dSettings)) {
+      settings[key] = dSettings[key];
+    }
   },
   save: function () {
     localStorage.setItem('stargaze_settings', JSON.stringify(settings));
@@ -91,8 +89,8 @@ function setupGui() {
   gui.add(settings, 'number of stars', 0, 1000, 25).listen();
   gui.add(settings, 'star trails', 0, 100, 1);
 
-  gui.add(sfunctions, 'reset');
-  gui.add(sfunctions, 'save');
+  gui.add(guiFunctions, 'reset');
+  gui.add(guiFunctions, 'save');
   gui.show();
   // gui.remember(settings);
 
