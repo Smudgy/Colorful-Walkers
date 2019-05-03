@@ -21,9 +21,9 @@ let audArr = new Array(nrofBands); // currently not in use
 let bass = 0;
 
 // ----------------------- settings -----------------------
-let dSettings = { //  impl. and gui
+const dSettings = { //  impl. and gui
   'number of stars': 250, // T T
-  'sound speed': 30, // F F
+  'sound speed': 30, // T T
   'follow mouse': false, // T T
   'angle change rate': 0.1, // F T
   'star turn rate': 0.4, // F T
@@ -34,14 +34,14 @@ let dSettings = { //  impl. and gui
   'star trails': 80, // T T
 }
 
-// try to find previous save
+// intial check for save; load if present
 let settings = JSON.parse(localStorage.getItem('stargaze_settings'));
 if (settings === null) {
-  // none existed
+  // none existed, use default settings
   settings = dSettings;
 }
 
-let guiFunctions = {
+const guiFunctions = {
   reset: function () {
     for (const key of Object.keys(dSettings)) {
       settings[key] = dSettings[key];
@@ -49,6 +49,15 @@ let guiFunctions = {
   },
   save: function () {
     localStorage.setItem('stargaze_settings', JSON.stringify(settings));
+  },
+  load: function () {
+    // try to find previous save
+    loaded = JSON.parse(localStorage.getItem('stargaze_settings'));
+    if (loaded !== null) {
+      for (const key of Object.keys(loaded)) {
+        settings[key] = loaded[key];
+      }
+    }
   }
 }
 
@@ -86,11 +95,13 @@ function setupGui() {
   bAngleChangeRate.add(settings, 'angle change rate', 0, 1, 0.1).listen();
   bAngleChangeRate.open();
 
+  gui.add(settings, 'sound speed', 0, 100, 1).listen();
   gui.add(settings, 'number of stars', 0, 1000, 25).listen();
-  gui.add(settings, 'star trails', 0, 100, 1);
+  gui.add(settings, 'star trails', 0, 100, 1).listen();
 
-  gui.add(guiFunctions, 'reset');
   gui.add(guiFunctions, 'save');
+  gui.add(guiFunctions, 'load');
+  gui.add(guiFunctions, 'reset');
   gui.show();
   // gui.remember(settings);
 
