@@ -86,14 +86,20 @@ function setupGui() {
   gui.addColor(settings, 'star color').listen();
 
   controllers[1] = gui.add(settings, 'fade background').listen();
-  fadeColor = gui.addFolder("fade color");
+  fadeColor = gui.addFolder(" ");
   fadeColor.addColor(settings, 'bg fade color').listen();
   fadeColor.open();
+  if (!settings['fade background']) {
+    fadeColor.hide();
+  }
 
   controllers[0] = gui.add(settings, 'follow mouse').listen();
-  bAngleChangeRate = gui.addFolder("angle change over time");
+  bAngleChangeRate = gui.addFolder("  ");
   bAngleChangeRate.add(settings, 'angle change rate', 0, 1, 0.1).listen();
   bAngleChangeRate.open();
+  if (settings['follow mouse']) {
+    bAngleChangeRate.hide();
+  }
 
   gui.add(settings, 'sound speed', 0, 100, 1).listen();
   gui.add(settings, 'number of stars', 0, 1000, 25).listen();
